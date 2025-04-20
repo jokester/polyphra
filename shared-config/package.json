@@ -1,0 +1,26 @@
+{
+  "name": "@private/shared-versions",
+  "private": true,
+  "description": "package versions to use across packages",
+  "dependencies": {
+    "@eslint-react/eslint-plugin": "workspace:*",
+    "@eslint/js": "workspace:*",
+    "@hono/node-server": "workspace:*",
+    "@tsconfig/strictest": "workspace:*",
+    "@types/debug": "workspace:*",
+    "@types/jest": "workspace:*",
+    "@types/node": "workspace:*",
+    "debug": "workspace:*",
+    "dprint": "workspace:*",
+    "eslint": "workspace:*",
+    "eslint-plugin-import-x": "workspace:*",
+    "hono": "workspace:*",
+    "jest": "workspace:*",
+    "taze": "workspace:*",
+    "ts-jest": "workspace:*",
+    "tsx": "workspace:*",
+    "typescript": "workspace:*",
+    "typescript-eslint": "workspace:*",
+    "wrangler": "workspace:*"
+  }
+}

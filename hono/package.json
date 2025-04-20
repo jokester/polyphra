@@ -1,0 +1,31 @@
+{
+  "name": "hono-template",
+  "description": "your next hono package",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "cf:build": "wrangler deploy --dry-run --outdir=build",
+    "cf:deploy": "wrangler publish",
+    "cf:dev": "wrangler dev --local --live-reload ./src/app.ts",
+    "build": "echo noop",
+    "dev": "DEBUG=* tsx -- ./src/node-server.ts",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
+    "format": "dprint fmt",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --watch --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "catalog:deps",
+    "debug": "catalog:deps",
+    "hono": "catalog:deps"
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

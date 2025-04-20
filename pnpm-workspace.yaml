@@ -1,0 +1,25 @@
+packages:
+  - hono
+
+catalogs:
+  deps:
+    "@hono/node-server": "^1.14.1"
+    debug: "^4.4.0"
+    hono: "^4.7.7"
+
+  dev-deps:
+    # Shared versions from shared-config/package.json and hono/package.json
+    "@eslint-react/eslint-plugin": ^1.48.4
+    "@eslint/js": ^9.25.0
+    "@hono/node-server": ^1.14.1
+    "@tsconfig/strictest": ^2.0.5
+    "@types/debug": ^4.1.12
+    "@types/jest": "<30"
+    "@types/node": ^20.17.30
+    dprint: ^0.47.6
+    eslint: ^9.25.0
+    "eslint-plugin-import-x": ^4.10.6
+    tsx: ^4.19.3
+    typescript: "^5.8.3"
+    "typescript-eslint": ^8.30.1
+    wrangler: ^3.114.6

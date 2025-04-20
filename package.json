@@ -1,13 +1,27 @@
 {
   "name": "polyphra",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "devDependencies": {
+    "@eslint-react/eslint-plugin": "catalog:dev-deps",
+    "@eslint/js": "catalog:dev-deps",
+    "@tsconfig/strictest": "catalog:dev-deps",
+    "@types/debug": "catalog:dev-deps",
+    "dprint": "catalog:dev-deps",
+    "eslint": "catalog:dev-deps",
+    "eslint-plugin-import-x": "catalog:dev-deps",
+    "tsx": "catalog:dev-deps",
+    "typescript": "catalog:dev-deps",
+    "typescript-eslint": "catalog:dev-deps",
+    "wrangler": "catalog:dev-deps"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.8.1"
+  "packageManager": "pnpm@10.9.0"
 }
