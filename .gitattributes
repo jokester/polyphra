@@ -1,0 +1,3 @@
+*.tfstate linguist-generated=true binary
+*.tfstate.backup linguist-generated=true binary
+**/*.ipynb filter=strip-notebook-output

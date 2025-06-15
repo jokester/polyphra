@@ -1,0 +1,2 @@
+--editable packages/server
+litellm==1.73.0

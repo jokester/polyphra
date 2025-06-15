@@ -1,6 +1,6 @@
 # polyphra
 
-**polyphra** is a service to help learn foreign language expressions, in an impressive way.
+**polyphra** lets you learn more natual foreign language expressions, in a way you like.
 
 ## Features
 
