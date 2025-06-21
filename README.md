@@ -1,8 +1,8 @@
 # polyphra
 
-**polyphra** lets you learn more natual foreign language expressions, in a way you like.
+**polyphra** is a browser extension to paraphrase text like your faviourite figure / character, and read out in their voice.
 
-## Features
+## Actors
 
-
-## Avatar
+- The blonde winner
+- (more)

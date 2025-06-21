@@ -1,6 +1,7 @@
 node_modules
 *.pyc
 *.egg-info
+/tmp
 /venv
 .conda_env_created
 .venv_created

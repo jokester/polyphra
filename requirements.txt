@@ -1,2 +1,11 @@
 --editable packages/server
+--config-settings editable-mode=strict --editable /home/mono/oss-ml-data/MiniMax-NOT-MCP
+jupyter
+ipykernel
 litellm==1.73.0
+langfuse==3.0.3
+ruff
+pur
+python-dotenv==1.1.0
+fastapi[standard]==0.115.13
+google-genai==1.21.1
