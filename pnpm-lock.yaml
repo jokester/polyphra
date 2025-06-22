@@ -6,15 +6,9 @@ settings:
 
 catalogs:
   deps:
-    '@hono/node-server':
-      specifier: ^1.14.1
-      version: 1.14.4
     debug:
       specifier: ^4.4.0
       version: 4.4.0
-    hono:
-      specifier: ^4.7.7
-      version: 4.8.2
   dev-deps:
     '@eslint-react/eslint-plugin':
       specifier: ^1.48.4
@@ -87,15 +81,9 @@ importers:
 
   packages/ui-core:
     dependencies:
-      '@hono/node-server':
-        specifier: catalog:deps
-        version: 1.14.4(hono@4.8.2)
       debug:
         specifier: catalog:deps
         version: 4.4.0
-      hono:
-        specifier: catalog:deps
-        version: 4.8.2
 
   packages/wxt:
     dependencies:
@@ -435,12 +423,6 @@ packages:
   '@eslint/plugin-kit@0.2.8':
     resolution: {integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@hono/node-server@1.14.4':
-    resolution: {integrity: sha512-DnxpshhYewr2q9ZN8ez/M5mmc3sucr8CT1sIgIy1bkeUXut9XWDkqHoFHRhWIQgkYnKpVRxunyhK7WzpJeJ6qQ==}
-    engines: {node: '>=18.14.1'}
-    peerDependencies:
-      hono: ^4
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -1511,10 +1493,6 @@ packages:
 
   highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
-
-  hono@4.8.2:
-    resolution: {integrity: sha512-hM+1RIn9PK1I6SiTNS6/y7O1mvg88awYLFEuEtoiMtRyT3SD2iu9pSFgbBXT3b1Ua4IwzvSTLvwO0SEhDxCi4w==}
-    engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
@@ -2943,10 +2921,6 @@ snapshots:
       '@eslint/core': 0.13.0
       levn: 0.4.1
 
-  '@hono/node-server@1.14.4(hono@4.8.2)':
-    dependencies:
-      hono: 4.8.2
-
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.6':
@@ -4077,8 +4051,6 @@ snapshots:
       function-bind: 1.1.2
 
   highlight.js@10.7.3: {}
-
-  hono@4.8.2: {}
 
   hookable@5.5.3: {}
 

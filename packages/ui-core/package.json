@@ -13,9 +13,7 @@
     "typecheck:watch": "tsc --watch --noEmit"
   },
   "dependencies": {
-    "@hono/node-server": "catalog:deps",
-    "debug": "catalog:deps",
-    "hono": "catalog:deps"
+    "debug": "catalog:deps"
   },
   "devDependencies": {
   }
