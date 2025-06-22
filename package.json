@@ -17,8 +17,7 @@
     "eslint-plugin-import-x": "catalog:dev-deps",
     "tsx": "catalog:dev-deps",
     "typescript": "catalog:dev-deps",
-    "typescript-eslint": "catalog:dev-deps",
-    "wrangler": "catalog:dev-deps"
+    "typescript-eslint": "catalog:dev-deps"
   },
   "keywords": [],
   "author": "",

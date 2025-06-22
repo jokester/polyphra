@@ -6,3 +6,5 @@ node_modules
 .conda_env_created
 .venv_created
 .env
+/packages/wxt/.output
+/packages/wxt/.wxt

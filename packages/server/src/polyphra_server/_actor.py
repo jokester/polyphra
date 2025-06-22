@@ -1,4 +1,6 @@
 from enum import StrEnum
+
+
 class ActorId(StrEnum):
     the_blonde_winner = "the_blonde_winner"
     the_chicken_guy = "the_chicken_guy"
@@ -9,7 +11,7 @@ class ActorId(StrEnum):
             case ActorId.the_blonde_winner:
                 return "the_blonde_winner_1"
             # case ActorId.the_chicken_guy:
-                # return "the_chicken_guy"
+            # return "the_chicken_guy"
             case _:
                 raise ValueError(f"Unknown actor: {self}")
 
@@ -85,5 +87,3 @@ Original text: {orig_text}
 Rephrased version:"""
             case _:
                 raise ValueError(f"Unknown actor: {self}")
-
-

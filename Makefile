@@ -18,7 +18,7 @@ test:
 	venv/bin/pytest
 
 format:
-	venv/bin/ruff format src notebooks
+	venv/bin/ruff format server.py packages/server
 
 venv: .venv_created
 

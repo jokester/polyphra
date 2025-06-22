@@ -9,7 +9,9 @@ logger.debug("paraphrase.py loaded")
 
 
 @langfuse.observe()
-async def llm_paraphrase(*, actor: ActorId, orig_text: str, model="vertex_ai/gemini-2.5-flash") -> str:
+async def llm_paraphrase(
+    *, actor: ActorId, orig_text: str, model="vertex_ai/gemini-2.5-flash"
+) -> str:
     res: litellm.ModelResponse = await litellm.acompletion(
         model=model,
         messages=[{"role": "user", "content": actor.to_paraphrase_prompt(orig_text)}],

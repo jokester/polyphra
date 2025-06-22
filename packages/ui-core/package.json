@@ -1,0 +1,22 @@
+{
+  "name": "@polyphra/ui-core",
+  "scripts": {
+    "build": "echo noop",
+    "dev": "DEBUG=* tsx -- ./src/node-server.ts",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
+    "format": "dprint fmt",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --watch --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "catalog:deps",
+    "debug": "catalog:deps",
+    "hono": "catalog:deps"
+  },
+  "devDependencies": {
+  }
+}
