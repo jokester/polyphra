@@ -9,3 +9,4 @@ pur
 python-dotenv==1.1.0
 fastapi[standard]==0.115.13
 google-genai==1.21.1
+mutagen==1.47.0
