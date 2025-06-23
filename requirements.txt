@@ -1,5 +1,6 @@
 --editable packages/server
---config-settings editable-mode=strict --editable /home/mono/oss-ml-data/MiniMax-NOT-MCP
+git+https://github.com/jokester/MiniMax-NOT-MCP.git@export-api-response
+# --config-settings editable-mode=strict --editable git+https://github.com/jokester/MiniMax-NOT-MCP.git@export-api-response
 jupyter
 ipykernel
 litellm==1.73.0
