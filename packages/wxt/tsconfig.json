@@ -2,6 +2,7 @@
     "extends": ["./tsconfig.base.json"],
     "compilerOptions": {
         "jsx": "react",
-        "jsxFactory": "React.createElement"
+        "jsxFactory": "React.createElement",
+        "lib": ["dom"]
     }
 }

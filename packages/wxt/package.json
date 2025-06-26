@@ -21,6 +21,7 @@
   "dependencies": {
     "debug": "catalog:deps",
     "preact": "^10.26.9",
+    "primereact": "^10.9.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
