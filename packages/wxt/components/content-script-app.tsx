@@ -1,33 +1,39 @@
 import React, { createContext, StrictMode, useEffect } from 'react';
-import { PrimeReactContext, PrimeReactProvider } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
-import { Button } from 'primereact/button';
+import {
+  Button,
+  Dialog,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  ChakraProvider,
+  EnvironmentProvider
+} from '@chakra-ui/react';
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 import { setSelectCallback } from './setup-select-callback';
 import { createDebugLogger } from './logger';
-import { Sidebar } from 'primereact/sidebar';
-// import { Tooltip } from 'primereact/tooltip';
-import { Toast } from 'primereact/toast';
-import { OverlayPanel } from 'primereact/overlaypanel';
-
-import { Dialog } from 'primereact/dialog';
+import { toaster } from '../src/components/ui/toaster';
+import { system } from '../src/components/ui/system';
 
 const logger = createDebugLogger('components:content-script-app');
 
 const App: React.FC<{shadowBody: HTMLElement}> = (props) => {
-  const toastRef = React.useRef<Toast>(null);
-
-  const overlayPanelRef = React.useRef<OverlayPanel>(null);
   const [textSelection, setTextSelection] = React.useState<string | null>("Dismiss this");
   const [showDialog, setShowDialog] = React.useState(true);
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+  const [popoverAnchorEl, setPopoverAnchorEl] = React.useState<HTMLElement | null>(null);
+
   useEffect(() => {
-    toastRef.current?.show({
+    toaster.create({
       id: 'app-mounted',
-      content: 'Polyphra running. Select some text!',
-      severity: 'info',
-      closable: false,
-      life: 5e3,
+      title: 'Polyphra running. Select some text!',
+      status: 'info',
+      duration: 5000,
     });
   }, []);
+
   useEffect(() => {
     logger('app mounted');
 
@@ -38,71 +44,116 @@ const App: React.FC<{shadowBody: HTMLElement}> = (props) => {
           n = n.parentElement;
         }
         if (n instanceof HTMLElement) {
-          logger('showing tooltip', n);
-          overlayPanelRef.current?.show(null, n);
+          logger('showing popover', n);
+          setPopoverAnchorEl(n);
+          setIsPopoverOpen(true);
           setTextSelection(text);
         }
-
-        // logger("Selection made", anchorNode, focusNode);
       },
       onMouseDown() {
         logger('Mouse down event detected');
+        setIsPopoverOpen(false);
       },
     });
   }, []);
 
   return (
     <>
-      <Toast ref={toastRef} position='top-left' appendTo={props.shadowBody} />
-      <OverlayPanel dismissable unstyled ref={overlayPanelRef} appendTo={props.shadowBody}>
-        <Button
-          onClick={() => {
-            overlayPanelRef.current?.hide();
-            setShowDialog(true);
-          }}
-        >
-          Rephrase with Polyphra
-        </Button>
-      </OverlayPanel>
-      <AppDialog
+      <Popover.Root
+        isOpen={isPopoverOpen}
+        onClose={() => setIsPopoverOpen(false)}
+        placement="auto"
+        closeOnBlur={true}
+      >
+        <PopoverTrigger>
+          <div style={{ position: 'absolute', left: -9999, top: -9999 }} />
+        </PopoverTrigger>
+        <PopoverContent>
+          <PopoverBody>
+            <Button
+              onClick={() => {
+                setIsPopoverOpen(false);
+                setShowDialog(true);
+              }}
+            >
+              Rephrase with Polyphra
+            </Button>
+          </PopoverBody>
+        </PopoverContent>
+      </Popover.Root>
+
+      <Dialog.Root
+        isOpen={showDialog}
+        onClose={() => setShowDialog(false)}
+        size="xl"
+      >
+        <Dialog.Trigger />
+        <Dialog.Backdrop/>
+        <Dialog.Positioner>
+              <Dialog.Content>
+      <Dialog.CloseTrigger />
+      <Dialog.Header>
+        <Dialog.Title >TITIE</Dialog.Title>
+      </Dialog.Header>
+      <Dialog.Body />
+      <Dialog.Footer />
+    </Dialog.Content>
+      </Dialog.Positioner>
+      </Dialog.Root>
+
+      {/* <AppDialog
         visible={showDialog}
         shadowBody={props.shadowBody}
         text={textSelection ?? ''}
         onHide={() => setShowDialog(false)}
-      />
+      /> */}
     </>
   );
 };
 
 const AppDialog: React.FC<{shadowBody: HTMLElement; visible?: boolean; text: string; onHide(): void}> = (props) => {
   return (
-    <Dialog
-      visible={props.visible}
-      header='Header'
-      draggable={false}
-      className='bg-white'
-      style={{width: '80vw'}}
-      position="top"
-      onHide={props.onHide}
-      appendTo={props.shadowBody}
+    <Modal
+      isOpen={props.visible}
+      onClose={props.onHide}
+      size="4xl"
     >
-      <p className='m-0'>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-        laborum.
-      </p>
-    </Dialog>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Header</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+            laborum.
+          </p>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   );
 };
 
 export function mount(container: HTMLElement, shadow: ShadowRoot) {
+  const shadowBody = shadow.querySelector('body')!;
+
+  // Create emotion cache for shadow DOM
+  const emotionCache = createCache({
+    key: "polyphra-root",
+    container: shadow,
+  });
+
   const root = createRoot(container);
   root.render(
-    <PrimeReactProvider>
-      <App shadowBody={shadow.querySelector('body')!} />
-    </PrimeReactProvider>,
+    <EnvironmentProvider value={() => shadow}>
+      <CacheProvider value={emotionCache}>
+        <ChakraProvider value={system}>
+          <App shadowBody={shadowBody} />
+        </ChakraProvider>
+      </CacheProvider>
+    </EnvironmentProvider>
   );
   return root;
 }

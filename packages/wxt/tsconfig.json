@@ -5,7 +5,8 @@
     "lib": ["dom"],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "skipLibCheck": true,
   },
   "exclude": ["jest.config.js"]
 }
