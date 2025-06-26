@@ -1,5 +1,6 @@
 
-import {mount} from '../components/content-script-app'
+import type { ContentScriptContext } from 'wxt/dist/utils/content-script-context';
+import { mount } from '../components/content-script-app'
 export default defineContentScript({
   matches: ["*://*/*"],
 

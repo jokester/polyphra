@@ -1,7 +1,9 @@
 {
-    "extends": ["./tsconfig.base.json"],
-    "compilerOptions": {
-        "jsx": "react",
-        "jsxFactory": "React.createElement"
+  "extends": ["./tsconfig.base.json"],
+  "compilerOptions": {
+    "jsx": "react",
+    "paths": {
+      "@/*": ["./*"]
     }
+  }
 }
