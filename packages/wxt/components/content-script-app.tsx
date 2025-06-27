@@ -12,7 +12,7 @@ import { Dialog } from 'primereact/dialog';
 
 const logger = createDebugLogger('components:content-script-app');
 
-const App: React.FC<{shadowBody: HTMLElement}> = (props) => {
+const App: React.FC<{}> = (props) => {
   const toastRef = React.useRef<Toast>(null);
 
   const overlayPanelRef = React.useRef<OverlayPanel>(null);
@@ -52,8 +52,8 @@ const App: React.FC<{shadowBody: HTMLElement}> = (props) => {
 
   return (
     <>
-      <Toast ref={toastRef} position='top-left' appendTo={props.shadowBody} />
-      <OverlayPanel dismissable unstyled ref={overlayPanelRef} appendTo={props.shadowBody}>
+      <Toast ref={toastRef} position='top-left' />
+      <OverlayPanel dismissable unstyled ref={overlayPanelRef} >
         <Button
           onClick={() => {
             overlayPanelRef.current?.hide();
@@ -65,7 +65,6 @@ const App: React.FC<{shadowBody: HTMLElement}> = (props) => {
       </OverlayPanel>
       <AppDialog
         visible={showDialog}
-        shadowBody={props.shadowBody}
         text={textSelection ?? ''}
         onHide={() => setShowDialog(false)}
       />
@@ -73,7 +72,7 @@ const App: React.FC<{shadowBody: HTMLElement}> = (props) => {
   );
 };
 
-const AppDialog: React.FC<{shadowBody: HTMLElement; visible?: boolean; text: string; onHide(): void}> = (props) => {
+const AppDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> = (props) => {
   return (
     <Dialog
       visible={props.visible}
@@ -83,7 +82,6 @@ const AppDialog: React.FC<{shadowBody: HTMLElement; visible?: boolean; text: str
       style={{width: '80vw'}}
       position="top"
       onHide={props.onHide}
-      appendTo={props.shadowBody}
     >
       <p className='m-0'>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
@@ -99,8 +97,8 @@ const AppDialog: React.FC<{shadowBody: HTMLElement; visible?: boolean; text: str
 export function mount(container: HTMLElement, shadow: ShadowRoot) {
   const root = createRoot(container);
   root.render(
-    <PrimeReactProvider value={{styleContainer: shadow.querySelector('head')!}}>
-      <App shadowBody={shadow.querySelector('body')!} />
+    <PrimeReactProvider value={{styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')!}}>
+      <App />
     </PrimeReactProvider>,
   );
   return root;
