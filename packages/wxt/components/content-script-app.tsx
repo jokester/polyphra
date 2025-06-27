@@ -4,7 +4,6 @@ import { createRoot } from 'react-dom/client';
 import { Button } from 'primereact/button';
 import { setSelectCallback } from './setup-select-callback';
 import { createDebugLogger } from './logger';
-import { Sidebar } from 'primereact/sidebar';
 // import { Tooltip } from 'primereact/tooltip';
 import { Toast } from 'primereact/toast';
 import { OverlayPanel } from 'primereact/overlaypanel';
@@ -100,7 +99,7 @@ const AppDialog: React.FC<{shadowBody: HTMLElement; visible?: boolean; text: str
 export function mount(container: HTMLElement, shadow: ShadowRoot) {
   const root = createRoot(container);
   root.render(
-    <PrimeReactProvider>
+    <PrimeReactProvider value={{styleContainer: shadow.querySelector('head')!}}>
       <App shadowBody={shadow.querySelector('body')!} />
     </PrimeReactProvider>,
   );
