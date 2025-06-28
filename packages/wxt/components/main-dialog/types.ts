@@ -1,4 +1,4 @@
-export interface Actor {
+export interface StyleSpec {
   id: string
   name: string
   description: string

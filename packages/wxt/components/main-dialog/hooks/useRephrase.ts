@@ -1,12 +1,12 @@
 import { useState } from "react"
-import { Actor } from "../types"
+import { StyleSpec } from "../types"
 import { mockResponses } from "../data"
 
 export const useRephrase = () => {
   const [rephrasedText, setRephrasedText] = useState<string>("")
   const [isRephrasing, setIsRephrasing] = useState<boolean>(false)
 
-  const rephrase = async (text: string, actor: Actor) => {
+  const rephrase = async (text: string, actor: StyleSpec) => {
     if (!text.trim() || !actor) return
 
     setIsRephrasing(true)

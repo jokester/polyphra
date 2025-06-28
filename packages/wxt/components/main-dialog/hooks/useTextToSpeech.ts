@@ -1,10 +1,10 @@
 import { useState } from "react"
-import { Actor } from "../types"
+import { StyleSpec } from "../types"
 
 export const useTextToSpeech = () => {
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false)
 
-  const speak = (text: string, actor?: Actor | null) => {
+  const speak = (text: string, actor?: StyleSpec | null) => {
     if (!text.trim()) return
 
     setIsSpeaking(true)

@@ -7,30 +7,15 @@ import { useActorSelection, useRephrase, useTextToSpeech } from "./hooks"
 import {
   DialogHeader,
   ActorSelector,
-  ActorCard,
   TextInput,
-  RephraseButton,
   OutputCard,
-  InstructionsCard,
 } from "./components"
 
 export const MainDialog: React.FC<MainDialogProps> = ({ visible, onHide, origText }) => {
   const [userText, setUserText] = useState<string>(origText)
   
   const { selectedActor, selectActor } = useActorSelection()
-  const { rephrasedText, isRephrasing, rephrase } = useRephrase()
   const { isSpeaking, speak } = useTextToSpeech()
-
-  const handleRephrase = async () => {
-    if (!userText.trim() || !selectedActor) return
-    await rephrase(userText, selectedActor)
-  }
-
-  const handleSpeak = () => {
-    speak(rephrasedText, selectedActor)
-  }
-
-  const isRephraseDisabled = !userText.trim() || !selectedActor || isRephrasing
 
   return (
     <Dialog
@@ -40,45 +25,28 @@ export const MainDialog: React.FC<MainDialogProps> = ({ visible, onHide, origTex
       modal
       draggable={false}
       resizable={false}
-      maximizable
       closeOnEscape
-      className="w-full max-w-4xl"
+      className="w-3/4 max-w-4xl"
     >
-      <div className="space-y-6">
-        {/* Actor Selection */}
-        <ActorSelector 
-          selectedActor={selectedActor} 
-          onActorChange={selectActor} 
-        />
-
-        {/* Selected Actor Info */}
-        {selectedActor && <ActorCard actor={selectedActor} />}
-
-        {/* Input Section */}
+      <div className="space-y-4">
         <TextInput 
-          value={origText} 
+          value={userText} 
           onChange={setUserText} 
           readOnly 
         />
 
-        {/* Rephrase Button */}
-        <RephraseButton
-          onRephrase={handleRephrase}
-          disabled={isRephraseDisabled}
-          isRephrasing={isRephrasing}
-          selectedActor={selectedActor}
+        <ActorSelector 
+          value={selectedActor} 
+          onChange={selectActor} 
         />
 
         {/* Output Section */}
         <OutputCard
-          rephrasedText={rephrasedText}
-          selectedActor={selectedActor}
-          onSpeak={handleSpeak}
-          isSpeaking={isSpeaking}
+          origText="TODO"
+          actor={selectedActor}
+          key={`outout-${selectedActor.id}`}
         />
 
-        {/* Instructions */}
-        <InstructionsCard />
       </div>
     </Dialog>
   )

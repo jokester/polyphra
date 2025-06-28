@@ -1,2 +1,2 @@
 export { MainDialog } from "./MainDialog"
-export type { MainDialogProps, Actor } from "./types"
+export type { MainDialogProps, StyleSpec } from "./types"

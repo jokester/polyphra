@@ -1,20 +1,16 @@
 import { useState } from "react"
-import { Actor } from "../types"
+import { StyleSpec } from "../types"
 
+import {styleOptions} from '../data'
 export const useActorSelection = () => {
-  const [selectedActor, setSelectedActor] = useState<Actor | null>(null)
+  const [selectedActor, setSelectedActor] = useState<StyleSpec>(styleOptions[0]!)
 
-  const selectActor = (actor: Actor | null) => {
+  const selectActor = (actor: StyleSpec) => {
     setSelectedActor(actor)
-  }
-
-  const clearSelection = () => {
-    setSelectedActor(null)
   }
 
   return {
     selectedActor,
     selectActor,
-    clearSelection,
   }
 }

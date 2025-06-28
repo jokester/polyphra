@@ -6,7 +6,7 @@ import { setSelectCallback } from './setup-select-callback';
 import { createDebugLogger } from './logger';
 import { Toast } from 'primereact/toast';
 import { OverlayPanel } from 'primereact/overlaypanel';
-import {MainDialog} from './main-dialog'
+import { MainDialog } from './main-dialog'
 
 import { Dialog } from 'primereact/dialog';
 
@@ -16,7 +16,7 @@ const App: React.FC<{}> = (props) => {
   const toastRef = React.useRef<Toast>(null);
 
   const overlayPanelRef = React.useRef<OverlayPanel>(null);
-  const [textSelection, setTextSelection] = React.useState<string | null>(null);
+  const [textSelection, setTextSelection] = React.useState<string | null>("I'm very happy because the weather is nice today.");
   const [showDialog, setShowDialog] = React.useState(true);
   useEffect(() => {
     toastRef.current?.show({
@@ -72,14 +72,14 @@ const App: React.FC<{}> = (props) => {
   );
 };
 
-const DummyDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> = (props) => {
+const DummyDialog: React.FC<{ visible?: boolean; text: string; onHide(): void }> = (props) => {
   return (
     <Dialog
       visible={props.visible}
       header='Header'
       draggable={false}
       className='bg-white'
-      style={{width: '80vw'}}
+      style={{ width: '80vw' }}
       position="top"
       onHide={props.onHide}
     >
@@ -98,7 +98,7 @@ export function mount(container: HTMLElement, shadow: ShadowRoot) {
   const root = createRoot(container);
   root.render(
     // styleContainer and appendTo are required for PrimeReact to work correctly in shadow DOM
-    <PrimeReactProvider value={{styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')!}}>
+    <PrimeReactProvider value={{ styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')! }}>
       <App />
     </PrimeReactProvider>,
   );

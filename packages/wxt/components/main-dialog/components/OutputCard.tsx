@@ -1,46 +1,37 @@
 import React from "react"
 import { Button } from "primereact/button"
 import { Card } from "primereact/card"
-import { Volume2, Loader2 } from "lucide-react"
-import { Actor } from "../types"
+import { Volume2, Loader2, RefreshCw } from "lucide-react"
+import { StyleSpec } from "../types"
 
 interface OutputCardProps {
-  rephrasedText: string
-  selectedActor: Actor | null
-  onSpeak: () => void
-  isSpeaking: boolean
+  origText: string
+  actor: StyleSpec
 }
 
 export const OutputCard: React.FC<OutputCardProps> = ({ 
-  rephrasedText, 
-  selectedActor, 
-  onSpeak, 
-  isSpeaking 
+  origText,
+  actor, 
 }) => {
-  if (!rephrasedText) return null
+
+  const [rephrasedText, setRephrasedText] = React.useState(origText)
+  const [generating, setGenerating] = React.useState(false)
+  const [playing, setPlaying] = React.useState(false)
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <label className="text-sm font-medium">Rephrased by {selectedActor?.name}</label>
-        <Button 
-          onClick={onSpeak} 
-          disabled={isSpeaking} 
-          outlined
-          size="small"
-          label={isSpeaking ? "Speaking..." : "Listen"}
-        >
-          {isSpeaking ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          ) : (
-            <Volume2 className="w-4 h-4 mr-2" />
-          )}
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <label className="text-sm font-medium">Wlll be:</label>
+        <span className="flex-1" />
+        <Button outlined size="small" aria-label="">
+            Read out <Volume2 className="w-4 h-4 ml-2" />
+        </Button>
+        <Button outlined size="small" aria-label="">
+            Regenerate <RefreshCw className="w-4 h-4 ml-2" />
         </Button>
       </div>
-      <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-        <div className="p-4">
-          <p className="text-sm leading-relaxed italic">"{rephrasedText}"</p>
-        </div>
+      <Card>
+          <p className="text-sm leading-relaxed italic">TODO</p>
       </Card>
     </div>
   )

@@ -1,6 +1,6 @@
-import { Actor } from "./types"
+import { StyleSpec } from "./types"
 
-export const styleOptions: Actor[] = [
+export const styleOptions: StyleSpec[] = [
   {
     id: "shakespeare",
     name: "William Shakespeare",

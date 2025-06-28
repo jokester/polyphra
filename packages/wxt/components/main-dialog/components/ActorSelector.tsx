@@ -1,20 +1,20 @@
 import React from "react"
 import { Dropdown } from "primereact/dropdown"
 import { Avatar } from "primereact/avatar"
-import { Actor } from "../types"
+import { StyleSpec } from "../types"
 import { styleOptions } from "../data"
 
 interface ActorSelectorProps {
-  selectedActor: Actor | null
-  onActorChange: (actor: Actor | null) => void
+  value: StyleSpec 
+  onChange: (actor: StyleSpec ) => void
 }
 
 // Custom option template for the dropdown
-const actorOptionTemplate = (option: Actor) => {
+const renderActorOption = (option: StyleSpec) => {
   return (
-    <div className="flex items-center gap-3 py-2">
+    <div className="flex items-center gap-2 py-2">
       <Avatar 
-        image={option.avatar || "/placeholder.svg"} 
+        image={option.avatar ||undefined} 
         label={option.name.split(" ").map((n) => n[0]).join("")}
         size="normal"
         shape="circle"
@@ -28,34 +28,22 @@ const actorOptionTemplate = (option: Actor) => {
 }
 
 // Selected value template for the dropdown
-const selectedActorTemplate = (option: Actor, props: any) => {
-  if (option) {
-    return (
-      <div className="flex items-center gap-2">
-        <Avatar 
-          image={option.avatar || "/placeholder.svg"} 
-          label={option.name.split(" ").map((n) => n[0]).join("")}
-          size="normal"
-          shape="circle"
-        />
-        <span>{option.name}</span>
-      </div>
-    )
-  }
-  return <span>{props.placeholder}</span>
+const renderActorValue = (option: StyleSpec, props: any) => {
+  return renderActorOption(option)
 }
 
-export const ActorSelector: React.FC<ActorSelectorProps> = ({ selectedActor, onActorChange }) => {
+export const ActorSelector: React.FC<ActorSelectorProps> = ({ value, onChange: onActorChange }) => {
   return (
-    <div className="space-y-3">
-      <label className="text-sm font-medium">Choose an actor</label>
+    <div className="space-y-2">
+      <label className="text-sm font-medium">In the style of:</label>
       <Dropdown
-        value={selectedActor}
+        value={value}
         options={styleOptions}
         onChange={(e) => onActorChange(e.value)}
-        itemTemplate={actorOptionTemplate}
-        valueTemplate={selectedActorTemplate}
-        placeholder="Choose an actor"
+        itemTemplate={renderActorOption}
+        valueTemplate={renderActorValue}
+        useOptionAsValue
+        placeholder=""
         className="w-full"
       />
     </div>

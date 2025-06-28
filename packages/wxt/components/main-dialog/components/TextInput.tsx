@@ -9,9 +9,9 @@ interface TextInputProps {
 
 export const TextInput: React.FC<TextInputProps> = ({ value, onChange, readOnly = false }) => {
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <label htmlFor="user-input" className="text-sm font-medium">
-        Your Text (Enter a sentence or paragraph to rephrase)
+        Selected text:
       </label>
       <InputTextarea
         id="user-input"
@@ -20,7 +20,6 @@ export const TextInput: React.FC<TextInputProps> = ({ value, onChange, readOnly 
         onChange={(e) => onChange(e.target.value)}
         readOnly={readOnly}
         className="w-full resize-none"
-        rows={4}
       />
     </div>
   )
