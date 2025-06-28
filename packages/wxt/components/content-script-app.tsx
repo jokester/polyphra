@@ -1,12 +1,12 @@
-import React, { createContext, StrictMode, useEffect } from 'react';
-import { PrimeReactContext, PrimeReactProvider } from 'primereact/api';
+import React, { useEffect } from 'react';
+import { PrimeReactProvider } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
 import { Button } from 'primereact/button';
 import { setSelectCallback } from './setup-select-callback';
 import { createDebugLogger } from './logger';
-// import { Tooltip } from 'primereact/tooltip';
 import { Toast } from 'primereact/toast';
 import { OverlayPanel } from 'primereact/overlaypanel';
+import {MainDialog} from './main-dialog'
 
 import { Dialog } from 'primereact/dialog';
 
@@ -16,7 +16,7 @@ const App: React.FC<{}> = (props) => {
   const toastRef = React.useRef<Toast>(null);
 
   const overlayPanelRef = React.useRef<OverlayPanel>(null);
-  const [textSelection, setTextSelection] = React.useState<string | null>("Dismiss this");
+  const [textSelection, setTextSelection] = React.useState<string | null>(null);
   const [showDialog, setShowDialog] = React.useState(true);
   useEffect(() => {
     toastRef.current?.show({
@@ -63,16 +63,16 @@ const App: React.FC<{}> = (props) => {
           Rephrase with Polyphra
         </Button>
       </OverlayPanel>
-      <AppDialog
+      <MainDialog
         visible={showDialog}
-        text={textSelection ?? ''}
+        origText={textSelection ?? ''}
         onHide={() => setShowDialog(false)}
       />
     </>
   );
 };
 
-const AppDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> = (props) => {
+const DummyDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> = (props) => {
   return (
     <Dialog
       visible={props.visible}
@@ -97,6 +97,7 @@ const AppDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> = (
 export function mount(container: HTMLElement, shadow: ShadowRoot) {
   const root = createRoot(container);
   root.render(
+    // styleContainer and appendTo are required for PrimeReact to work correctly in shadow DOM
     <PrimeReactProvider value={{styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')!}}>
       <App />
     </PrimeReactProvider>,
