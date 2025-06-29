@@ -41,9 +41,13 @@ jobs:
         working-directory: packages/wxt
         run: pnpm zip && pnpm zip:firefox
 
+      - name: Show artifact files
+        run: find packages/wxt/.output
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: polyphra-extension
-          path: packages/wxt/.output/*.zip
-          retention-days: 365
+          path: |
+            packages/wxt/.output/*.zip
+          retention-days: 90
