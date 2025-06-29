@@ -15,21 +15,24 @@ import { ApiProvider } from '@/api';
 
 const logger = createDebugLogger('components:content-script-app');
 
-const App: React.FC<{}> = (props) => {
+const App: React.FC<{revivedAuthToken?: string}> = (props) => {
   const toastRef = React.useRef<Toast>(null);
   const apiClientRef = useSingleton(() =>
     new PolyphraApiClient(
-      'http://localhost:8000',
-      localStorage.getItem('polyphra_auth_token') || undefined,
-      newToken => localStorage.setItem('polyphra_auth_token', newToken),
+      localStorage.getItem('polyphra_api_url') || 'https://polyphra-api.ihate.work',
+      props.revivedAuthToken || undefined,
+      newToken => {
+        authToken.setValue(newToken), logger('Auth token saved', newToken);
+      },
     )
   );
 
   const overlayPanelRef = React.useRef<OverlayPanel>(null);
   const [textSelection, setTextSelection] = React.useState<string | null>(
-    "I'm very happy because the weather is nice today.",
+    null
+    // "I'm very happy because the weather is nice today.",
   );
-  const [showDialog, setShowDialog] = React.useState(true);
+  const [showDialog, setShowDialog] = React.useState(false);
   useEffect(() => {
     toastRef.current?.show({
       id: 'app-mounted',
@@ -75,11 +78,13 @@ const App: React.FC<{}> = (props) => {
           Rephrase with Polyphra
         </Button>
       </OverlayPanel>
-      <MainDialog
-        visible={showDialog}
+      {
+        showDialog && <MainDialog
+        visible
         origText={textSelection ?? ''}
         onHide={() => setShowDialog(false)}
       />
+      }
     </ApiProvider>
   );
 };
@@ -106,14 +111,14 @@ const DummyDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> =
   );
 };
 
-export function mount(container: HTMLElement, shadow: ShadowRoot) {
+export function mount(container: HTMLElement, shadow: ShadowRoot, revivedAuthToken?: string) {
   const root = createRoot(container);
   root.render(
     // styleContainer and appendTo are required for PrimeReact to work correctly in shadow DOM
     <PrimeReactProvider
       value={{styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')!}}
     >
-      <App />
+      <App revivedAuthToken={revivedAuthToken} />
     </PrimeReactProvider>,
   );
   return root;

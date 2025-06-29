@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { PolyphraApiClient } from './client';
+import type { PolyphraApiClient } from './client';
 
 const ApiHolder = createContext<PolyphraApiClient>(null!);
 
