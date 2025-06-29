@@ -1,5 +1,7 @@
 from enum import StrEnum
 
+from pydantic import BaseModel
+
 
 class ActorId(StrEnum):
     the_blonde_winner = "the_blonde_winner"
@@ -87,3 +89,25 @@ Original text: {orig_text}
 Rephrased version:"""
             case _:
                 raise ValueError(f"Unknown actor: {self}")
+
+
+class ActorSpec(BaseModel):
+    id: ActorId
+    name: str # e.g. "The Blonde Winner"
+    description: str # 
+    origin: str  # e.g. The New Rome
+
+actor_presets = (
+    ActorSpec(
+        id=ActorId.the_blonde_winner,
+        name="The Blonde Winner",
+        description="A charismatic and confident speaker with a distinctive style.",
+        origin="The New Rome",
+    ),
+    ActorSpec(
+        id=ActorId.the_chicken_guy,
+        name="The Chicken Guy",
+        description="A calm and collected speaker with a menacing undertone.",
+        origin="Breaking Bad/Better Call Saul",
+    ),
+)

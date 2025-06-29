@@ -12,7 +12,7 @@ venv/.deps_installed: venv requirements.txt
 	@touch $@
 
 upgrade-deps:
-	venv/bin/pur -r requirements.txt --skip=$(FREEZE_PY_REQ)
+	venv/bin/pur -r requirements.txt --force --skip=$(FREEZE_PY_REQ)
 
 test:
 	venv/bin/pytest
