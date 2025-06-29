@@ -80,6 +80,23 @@ export const OutputCard: React.FC<OutputCardProps> = ({
     return finish.then(() => audio.pause());
   }, [playbackAudio]);
 
+  const textOutput = s?.rephrasedText ?? (
+    <>
+      <p>Generating rephrase...</p>
+      <ProgressBar mode='indeterminate' style={{height: '0.8em'}}></ProgressBar>
+    </>
+  );
+
+  const playButtonText = s?.speechUri
+    ? (
+      <>
+        Play voice<Volume2 className='w-4 h-4 ml-2' />
+      </>
+    )
+    : s?.speechError
+    ? 'Error generating voice'
+    : 'Generating voice...';
+
   return (
     <div className='space-y-2'>
       <div className='flex items-center justify-between gap-2'>
@@ -89,18 +106,19 @@ export const OutputCard: React.FC<OutputCardProps> = ({
           outlined
           disabled={!s?.speechUri}
           onClick={() => setPlaybackAudio({uri: s!.speechUri!, startTimestamp: Date.now()})}
+          className='w-40 justify-center'
           size='small'
-          aria-label='Play generated speech'
+          aria-label='play generated voice'
         >
-          Read out <Volume2 className='w-4 h-4 ml-2' />
+          {playButtonText}
         </Button>
 
         {/* <Button outlined size='small' aria-label=''> Regenerate <RefreshCw className='w-4 h-4 ml-2' /> </Button> */}
       </div>
       <Card>
-        <p className='text-sm leading-relaxed italic'>
-          {s?.rephrasedText ?? <ProgressBar mode='indeterminate' style={{height: '0.8em'}} />}
-        </p>
+        <div className='text-sm leading-relaxed italic'>
+          {textOutput}
+        </div>
       </Card>
     </div>
   );
