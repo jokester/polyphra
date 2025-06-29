@@ -7,10 +7,7 @@ import { useActorSelection, useRephrase, useTextToSpeech } from './hooks';
 import { ActorSelector, DialogHeader, OutputCard, TextInput } from './components';
 
 export const MainDialog: React.FC<MainDialogProps> = ({visible, onHide, origText}) => {
-  const [userText, setUserText] = useState<string>(origText);
-
-  const {selectedActor, selectActor} = useActorSelection();
-  const {isSpeaking, speak} = useTextToSpeech();
+  const {actors, setCurrentActor, currentActor} = useActorSelection();
 
   return (
     <Dialog
@@ -25,21 +22,21 @@ export const MainDialog: React.FC<MainDialogProps> = ({visible, onHide, origText
     >
       <div className='space-y-4'>
         <TextInput
-          value={userText}
-          onChange={setUserText}
+          value={origText}
+          onChange={() => {}}
           readOnly
         />
 
         <ActorSelector
-          value={selectedActor}
-          onChange={selectActor}
+        options={actors}
+          value={currentActor}
+          onChange={setCurrentActor}
         />
 
-        {/* Output Section */}
         <OutputCard
-          origText='TODO'
-          actor={selectedActor}
-          key={`outout-${selectedActor.id}`}
+          origText={origText}
+          actor={currentActor}
+          key={`output-${currentActor?.id}`}
         />
       </div>
     </Dialog>

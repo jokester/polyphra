@@ -44,6 +44,18 @@ async def get_actors() -> list[ActorSpec]:
     return actor_presets
 
 
+class CreateParaphraseRequest(BaseModel):
+    actor: ActorId
+    text: str
+
+
+@app.post("/paraphrase/create")
+async def paraphrase_1(req:CreateParaphraseRequest, authorization: str = Header(None)):
+    return {
+        "text": await default_services.paraphrase_text(
+            actor=req.actor, orig_text=req.text
+        )
+    }
 class CreateTTSRequest(BaseModel):
     actor: ActorId
     text: str
@@ -60,16 +72,3 @@ async def tts_1(req: CreateTTSRequest, authorization: str = Header(None)):
         "audio_duration": mp3_duration,
     }
 
-
-class CreateParaphraseRequest(BaseModel):
-    actor: ActorId
-    text: str
-
-
-@app.post("/paraphrase/create")
-async def paraphrase_1(req: CreateTTSRequest, authorization: str = Header(None)):
-    return {
-        "text": await default_services.paraphrase_text(
-            actor=req.actor, orig_text=req.text
-        )
-    }

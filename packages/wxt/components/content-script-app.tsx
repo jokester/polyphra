@@ -18,10 +18,8 @@ const logger = createDebugLogger('components:content-script-app');
 const App: React.FC<{}> = (props) => {
   const toastRef = React.useRef<Toast>(null);
   const apiClientRef = useSingleton(() =>
-    new PolyphraApiClient('http://localhost:8000', localStorage.getItem('polyphra_auth_token') || undefined)
+    new PolyphraApiClient('http://localhost:8000', localStorage.getItem('polyphra_auth_token') || undefined, newToken => localStorage.setItem('polyphra_auth_token', newToken)),
   );
-
-  const actors = useSingleton(() => apiClientRef.current.getActors());
 
   const overlayPanelRef = React.useRef<OverlayPanel>(null);
   const [textSelection, setTextSelection] = React.useState<string | null>(
@@ -82,14 +80,14 @@ const App: React.FC<{}> = (props) => {
   );
 };
 
-const DummyDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> = (props) => {
+const DummyDialog: React.FC<{ visible?: boolean; text: string; onHide(): void }> = (props) => {
   return (
     <Dialog
       visible={props.visible}
       header='Header'
       draggable={false}
       className='bg-white'
-      style={{width: '80vw'}}
+      style={{ width: '80vw' }}
       position='top'
       onHide={props.onHide}
     >
@@ -109,7 +107,7 @@ export function mount(container: HTMLElement, shadow: ShadowRoot) {
   root.render(
     // styleContainer and appendTo are required for PrimeReact to work correctly in shadow DOM
     <PrimeReactProvider
-      value={{styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')!}}
+      value={{ styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')! }}
     >
       <App />
     </PrimeReactProvider>,

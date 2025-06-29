@@ -1,16 +1,27 @@
-import { useState } from 'react';
-import { StyleSpec } from '../types';
+import { useEffect, useState } from 'react';
 
-import { styleOptions } from '../data';
+import { useApiClient } from '@/api';
+import { useSingleton } from 'foxact/use-singleton';
+import { ActorSpec } from '@/api/client';
+import {usePromised} from '@jokester/ts-commonutil/lib/react/hook/use-promised'
 export const useActorSelection = () => {
-  const [selectedActor, setSelectedActor] = useState<StyleSpec>(styleOptions[0]!);
+  const api = useApiClient()
+  const actorsP = useSingleton(() => api.getActors())
+  const [currentActor, setCurrentActor] = useState<ActorSpec | null>(null);
+  const actors = usePromised(actorsP.current)
 
-  const selectActor = (actor: StyleSpec) => {
-    setSelectedActor(actor);
-  };
+  useEffect(() => {
+    if (actors.value && actors.value.length > 0) {
+      // Set the first actor as the default
+      setCurrentActor(actors.value[0]);
+    } else {
+      setCurrentActor(null);
+    }
+  }, [actors ])
 
   return {
-    selectedActor,
-    selectActor,
+    actors: actors.value ?? [],
+    currentActor,
+    setCurrentActor,
   };
 };
