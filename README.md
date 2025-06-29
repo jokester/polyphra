@@ -1,8 +1,11 @@
 # polyphra
 
-**polyphra** is a browser extension to paraphrase text like your faviourite figure / character, and read out in their voice.
+新感覚英語学習ツール「Polyphra」のレポジトリです。
 
-## Actors
+詳細はzenn記事をご確認ください: https://zenn.dev/momocraft/articles/899cd2f2541d41
 
-- The blonde winner
-- (more)
+デモ動画: https://youtu.be/4LFVFoRXMoQ
+
+## LICENSE
+
+MIT
