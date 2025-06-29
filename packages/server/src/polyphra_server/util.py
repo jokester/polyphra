@@ -1,21 +1,13 @@
-from typing import Awaitable, ParamSpec, TypeVar, Callable, Any
+from typing import Awaitable, ParamSpec, TypeVar, Callable
 
 import functools
 import logging
-from fastapi import FastAPI
 from concurrent.futures import ThreadPoolExecutor
 import asyncio
 import os
-from ._actor import ActorId
 
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
-app = FastAPI()
-
-logger.info("FastAPI app created")
-
 
 _thread_pool = ThreadPoolExecutor(max_workers=16)
 
@@ -46,5 +38,5 @@ def init_langfuse():
             host=os.getenv("LANGFUSE_HOST", "https://us.cloud.langfuse.com"),
         )
 
-    logger.warning("Skipping Langfuse initialization")
+    logger.warning("Langfuse not configured. Skipping Langfuse initialization")
     return None

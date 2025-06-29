@@ -2,7 +2,7 @@ import logging
 import litellm
 import langfuse
 
-from ._singleton import ActorId
+from ..model import ActorId
 
 logger = logging.getLogger(__name__)
 logger.debug("paraphrase.py loaded")

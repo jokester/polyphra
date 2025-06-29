@@ -6,7 +6,8 @@ from minimax_mcp.api import MinimaxApi
 from mutagen.mp3 import MP3
 from pathlib import Path
 
-from ._singleton import ActorId, run_in_thread_pool
+from ..model import ActorId
+from ..util import run_in_thread_pool
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,7 @@ def get_minimax_api() -> MinimaxApi:
 
 
 @run_in_thread_pool
-def text2audio(*, actor: ActorId, text: str) -> (bytes, float):
+def text2audio(*, actor: ActorId, text: str) -> tuple[bytes, float]:
     assert isinstance(actor, ActorId), f"Invalid actor: {actor}"
     api_res = get_minimax_api().text_to_audio(
         text=text,

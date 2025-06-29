@@ -1,7 +1,6 @@
 import uuid
 from pydantic import BaseModel
 from itsdangerous import URLSafeSerializer
-import crypt
 
 class Session(BaseModel):
     user_id: str | int | None = None
