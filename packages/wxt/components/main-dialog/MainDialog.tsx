@@ -28,7 +28,7 @@ export const MainDialog: React.FC<MainDialogProps> = ({visible, onHide, origText
         />
 
         <ActorSelector
-        options={actors}
+          options={actors}
           value={currentActor}
           onChange={setCurrentActor}
         />

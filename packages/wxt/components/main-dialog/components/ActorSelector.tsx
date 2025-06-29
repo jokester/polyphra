@@ -4,7 +4,7 @@ import { Avatar } from 'primereact/avatar';
 import { ActorSpec } from '@/api/client';
 
 interface ActorSelectorProps {
-  options: ActorSpec[],
+  options: ActorSpec[];
   value: ActorSpec | null;
   onChange: (actor: ActorSpec) => void;
 }
@@ -32,7 +32,7 @@ const renderActorValue = (option: ActorSpec) => {
   return renderActorOption(option);
 };
 
-export const ActorSelector: React.FC<ActorSelectorProps> = ({ value, onChange: onActorChange, options }) => {
+export const ActorSelector: React.FC<ActorSelectorProps> = ({value, onChange: onActorChange, options}) => {
   return (
     <div className='space-y-2'>
       <label className='text-sm font-medium'>In the style of:</label>

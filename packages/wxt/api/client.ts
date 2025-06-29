@@ -13,12 +13,16 @@ export class PolyphraApiClient {
   private readonly credHolder: ResourcePool<{
     authToken?: string;
     current_session?: {
-      session_id: string
-      user_id?: string
-    }
+      session_id: string;
+      user_id?: string;
+    };
   }>;
 
-  constructor(private readonly baseUrl: string, authToken: string | undefined, private readonly onAuthTokenChange: (authToken: string) => void) {
+  constructor(
+    private readonly baseUrl: string,
+    authToken: string | undefined,
+    private readonly onAuthTokenChange: (authToken: string) => void,
+  ) {
     this.credHolder = ResourcePool.single({authToken});
     logger('PolyphraApiClient initialized', baseUrl, authToken);
   }
@@ -30,14 +34,13 @@ export class PolyphraApiClient {
   }
 
   async createParaphrase(actor: ActorSpec, text: string): Promise<{text: string}> {
-
     const headers = await this.getOrFetchAuthToken();
-    return this.post<{text: string}>('/paraphrase/create', { actor: actor.id, text }, headers)
+    return this.post<{text: string}>('/paraphrase/create', {actor: actor.id, text}, headers);
   }
 
-  async createTts(actor: ActorSpec, text: string): Promise<{audio_uri: string, audio_duration: number}> {
+  async createTts(actor: ActorSpec, text: string): Promise<{audio_uri: string; audio_duration: number}> {
     const headers = await this.getOrFetchAuthToken();
-    return this.post('/tts/create', { actor: actor.id, text }, headers)
+    return this.post('/tts/create', {actor: actor.id, text}, headers);
   }
 
   private async getOrFetchAuthToken(): Promise<{authorization?: string}> {
@@ -48,14 +51,16 @@ export class PolyphraApiClient {
     }
 
     if (t.value.authToken) {
-      const resBody = await this.get<{session_id: string}>('/session/current', {authorization: `Bearer ${t.value.authToken}`}).catch(e => {
+      const resBody = await this.get<{session_id: string}>('/session/current', {
+        authorization: `Bearer ${t.value.authToken}`,
+      }).catch(e => {
         logger('Failed to get current session', e);
         return null;
       });
 
       if (resBody?.session_id) {
         logger('Auth token validated', resBody.session_id);
-        t.value.current_session = {...resBody}
+        t.value.current_session = {...resBody};
         return {authorization: `Bearer ${t.value.authToken}`};
       }
     }
@@ -81,9 +86,9 @@ export class PolyphraApiClient {
     const mergedHeaders = {
       ...headers,
       ...body && {
-      'Content-Type': 'application/json',
-      }
-    }
+        'Content-Type': 'application/json',
+      },
+    };
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       method: 'POST',
       ...body && {

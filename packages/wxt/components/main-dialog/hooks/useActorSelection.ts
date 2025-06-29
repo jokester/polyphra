@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react';
 import { useApiClient } from '@/api';
 import { useSingleton } from 'foxact/use-singleton';
 import { ActorSpec } from '@/api/client';
-import {usePromised} from '@jokester/ts-commonutil/lib/react/hook/use-promised'
+import { usePromised } from '@jokester/ts-commonutil/lib/react/hook/use-promised';
 export const useActorSelection = () => {
-  const api = useApiClient()
-  const actorsP = useSingleton(() => api.getActors())
+  const api = useApiClient();
+  const actorsP = useSingleton(() => api.getActors());
   const [currentActor, setCurrentActor] = useState<ActorSpec | null>(null);
-  const actors = usePromised(actorsP.current)
+  const actors = usePromised(actorsP.current);
 
   useEffect(() => {
     if (actors.value && actors.value.length > 0) {
@@ -17,7 +17,7 @@ export const useActorSelection = () => {
     } else {
       setCurrentActor(null);
     }
-  }, [actors ])
+  }, [actors]);
 
   return {
     actors: actors.value ?? [],
