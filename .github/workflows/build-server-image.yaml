@@ -58,6 +58,6 @@ jobs:
             type=gha
           cache-to:
             type=gha
-          platforms: linux/arm64,linux/amd64
+          # platforms: linux/arm64,linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
