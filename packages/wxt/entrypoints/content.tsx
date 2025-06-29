@@ -10,7 +10,8 @@ export default defineContentScript({
   cssInjectionMode: 'ui',
 
   async main(ctx: ContentScriptContext) {
-    // Executed when content script is loaded, can be async
+    // Executed inside tab when content script is loaded, can be async
+    const revivedAuthToken = await authToken.getValue();
     console.info('content script running');
 
     const ui = await createShadowRootUi(ctx, {
@@ -23,7 +24,7 @@ export default defineContentScript({
         // const app = document.createElement('p');
         // app.textContent = 'Hello world!';
         // container.append(app);
-        return mount(container, shadow);
+        return mount(container, shadow, revivedAuthToken);
       },
     });
 
