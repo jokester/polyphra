@@ -1,5 +1,5 @@
---editable packages/server
-git+https://github.com/jokester/MiniMax-NOT-MCP.git@export-api-response
+--editable ./packages/server
+https://github.com/jokester/MiniMax-NOT-MCP/archive/refs/heads/export-api-response.zip
 # --config-settings editable-mode=strict --editable git+https://github.com/jokester/MiniMax-NOT-MCP.git@export-api-response
 jupyter==1.1.1
 ipykernel==6.29.5

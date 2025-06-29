@@ -1,0 +1,5 @@
+node_modules
+venv
+.env
+.venv_created
+__pycache__
