@@ -18,8 +18,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: latest
+        # with:
+        #   version: latest
 
       - name: Get pnpm store directory
         shell: bash
@@ -39,11 +39,16 @@ jobs:
 
       - name: Build extension zips
         working-directory: packages/wxt
-        run: pnpm zip && pnpm zip:firefox
+        run: pnpm zip && pnpm zip:firefox && mv -v .output output
+
+      - name: Show artifact files
+        run: find packages/wxt/output
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: polyphra-extension
-          path: packages/wxt/.output/*.zip
-          retention-days: 365
+          path: |
+            packages/wxt/output/*.zip
+          retention-days: 90
+          if-no-files-found: error
