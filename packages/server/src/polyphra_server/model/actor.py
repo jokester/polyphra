@@ -12,8 +12,8 @@ class ActorId(StrEnum):
         match self:
             case ActorId.the_blonde_winner:
                 return "the_blonde_winner_1"
-            # case ActorId.the_chicken_guy:
-            # return "the_chicken_guy"
+            case ActorId.the_chicken_guy:
+                return "the_chicken_guy"
             case _:
                 raise ValueError(f"Unknown actor: {self}")
 
