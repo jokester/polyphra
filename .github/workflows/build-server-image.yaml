@@ -51,7 +51,7 @@ jobs:
         uses: docker/build-push-action@v6.9.0
         with:
           context: .
-          # push: ${{ github.event_name != 'pull_request' }}
+          push: true # ${{ github.event_name != 'pull_request' }}
           build-args:
             POLYPHRA_BUILD_ID=${{ github.repository }}:${{ github.ref }}:${{ github.sha }}
           cache-from:
