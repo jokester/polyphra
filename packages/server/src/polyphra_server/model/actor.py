@@ -12,8 +12,8 @@ class ActorId(StrEnum):
         match self:
             case ActorId.the_blonde_winner:
                 return "the_blonde_winner_1"
-            # case ActorId.the_chicken_guy:
-            # return "the_chicken_guy"
+            case ActorId.the_chicken_guy:
+                return "the_chicken_guy"
             case _:
                 raise ValueError(f"Unknown actor: {self}")
 
@@ -94,6 +94,7 @@ Rephrased version:"""
 class ActorSpec(BaseModel):
     id: ActorId
     name: str  # e.g. "The Blonde Winner"
+    acronym: str
     description: str  #
     origin: str  # e.g. The New Rome
 
@@ -102,12 +103,14 @@ actor_presets = (
     ActorSpec(
         id=ActorId.the_blonde_winner,
         name="The Blonde Winner",
+        acronym='DT',
         description="A charismatic and confident speaker with a distinctive style.",
         origin="The New Rome",
     ),
     ActorSpec(
         id=ActorId.the_chicken_guy,
         name="The Chicken Guy",
+        acronym='GF',
         description="A calm and collected speaker with a menacing undertone.",
         origin="Breaking Bad/Better Call Saul",
     ),

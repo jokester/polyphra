@@ -15,7 +15,7 @@ const renderActorOption = (option: ActorSpec | null) => {
     <div className='flex items-center gap-2 py-2'>
       <Avatar
         image={undefined}
-        label={option?.name.split(' ').map((n) => n[0]).slice(0, 2).join('') ?? '??'}
+        label={option?.acronym ?? option?.name.split(' ').map((n) => n[0]).slice(0, 2).join('') ?? '??'}
         size='normal'
         shape='circle'
       />
