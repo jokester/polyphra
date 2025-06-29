@@ -19,7 +19,7 @@ const App: React.FC<{}> = (props) => {
   const toastRef = React.useRef<Toast>(null);
   const apiClientRef = useSingleton(() =>
     new PolyphraApiClient(
-      'http://localhost:8000',
+      localStorage.getItem('polyphra_api_url') || 'https://polyphra-api.ihate.work',
       localStorage.getItem('polyphra_auth_token') || undefined,
       newToken => localStorage.setItem('polyphra_auth_token', newToken),
     )
