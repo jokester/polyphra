@@ -1,36 +1,36 @@
-import { useState } from "react"
-import { StyleSpec } from "../types"
-import { mockResponses } from "../data"
+import { useState } from 'react';
+import { StyleSpec } from '../types';
+import { mockResponses } from '../data';
 
 export const useRephrase = () => {
-  const [rephrasedText, setRephrasedText] = useState<string>("")
-  const [isRephrasing, setIsRephrasing] = useState<boolean>(false)
+  const [rephrasedText, setRephrasedText] = useState<string>('');
+  const [isRephrasing, setIsRephrasing] = useState<boolean>(false);
 
   const rephrase = async (text: string, actor: StyleSpec) => {
-    if (!text.trim() || !actor) return
+    if (!text.trim() || !actor) return;
 
-    setIsRephrasing(true)
+    setIsRephrasing(true);
 
     // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Generate rephrased response based on actor
-    const template = mockResponses[actor.id] || text
-    const processedText = text.toLowerCase().replace(/you/g, "thou").replace(/your/g, "thy")
-    const result = template.replace("{text}", actor.id === "shakespeare" ? processedText : text)
+    const template = mockResponses[actor.id] || text;
+    const processedText = text.toLowerCase().replace(/you/g, 'thou').replace(/your/g, 'thy');
+    const result = template.replace('{text}', actor.id === 'shakespeare' ? processedText : text);
 
-    setRephrasedText(result)
-    setIsRephrasing(false)
-  }
+    setRephrasedText(result);
+    setIsRephrasing(false);
+  };
 
   const clearRephrasedText = () => {
-    setRephrasedText("")
-  }
+    setRephrasedText('');
+  };
 
   return {
     rephrasedText,
     isRephrasing,
     rephrase,
     clearRephrasedText,
-  }
-}
+  };
+};

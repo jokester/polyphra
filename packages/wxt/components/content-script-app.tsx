@@ -6,17 +6,27 @@ import { setSelectCallback } from './setup-select-callback';
 import { createDebugLogger } from './logger';
 import { Toast } from 'primereact/toast';
 import { OverlayPanel } from 'primereact/overlaypanel';
-import { MainDialog } from './main-dialog'
+import { MainDialog } from './main-dialog';
 
 import { Dialog } from 'primereact/dialog';
+import { PolyphraApiClient } from '@/api/client';
+import { useSingleton } from 'foxact/use-singleton';
+import { ApiProvider } from '@/api';
 
 const logger = createDebugLogger('components:content-script-app');
 
 const App: React.FC<{}> = (props) => {
   const toastRef = React.useRef<Toast>(null);
+  const apiClientRef = useSingleton(() =>
+    new PolyphraApiClient('http://localhost:8000', localStorage.getItem('polyphra_auth_token') || undefined)
+  );
+
+  const actors = useSingleton(() => apiClientRef.current.getActors());
 
   const overlayPanelRef = React.useRef<OverlayPanel>(null);
-  const [textSelection, setTextSelection] = React.useState<string | null>("I'm very happy because the weather is nice today.");
+  const [textSelection, setTextSelection] = React.useState<string | null>(
+    "I'm very happy because the weather is nice today.",
+  );
   const [showDialog, setShowDialog] = React.useState(true);
   useEffect(() => {
     toastRef.current?.show({
@@ -51,9 +61,9 @@ const App: React.FC<{}> = (props) => {
   }, []);
 
   return (
-    <>
+    <ApiProvider value={apiClientRef.current}>
       <Toast ref={toastRef} position='top-left' />
-      <OverlayPanel dismissable unstyled ref={overlayPanelRef} >
+      <OverlayPanel dismissable unstyled ref={overlayPanelRef}>
         <Button
           onClick={() => {
             overlayPanelRef.current?.hide();
@@ -68,19 +78,19 @@ const App: React.FC<{}> = (props) => {
         origText={textSelection ?? ''}
         onHide={() => setShowDialog(false)}
       />
-    </>
+    </ApiProvider>
   );
 };
 
-const DummyDialog: React.FC<{ visible?: boolean; text: string; onHide(): void }> = (props) => {
+const DummyDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> = (props) => {
   return (
     <Dialog
       visible={props.visible}
       header='Header'
       draggable={false}
       className='bg-white'
-      style={{ width: '80vw' }}
-      position="top"
+      style={{width: '80vw'}}
+      position='top'
       onHide={props.onHide}
     >
       <p className='m-0'>
@@ -98,7 +108,9 @@ export function mount(container: HTMLElement, shadow: ShadowRoot) {
   const root = createRoot(container);
   root.render(
     // styleContainer and appendTo are required for PrimeReact to work correctly in shadow DOM
-    <PrimeReactProvider value={{ styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')! }}>
+    <PrimeReactProvider
+      value={{styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')!}}
+    >
       <App />
     </PrimeReactProvider>,
   );

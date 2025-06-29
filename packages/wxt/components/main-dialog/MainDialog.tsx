@@ -1,21 +1,16 @@
-"use client"
+'use client';
 
-import React, { useState } from "react"
-import { Dialog } from "primereact/dialog"
-import { MainDialogProps } from "./types"
-import { useActorSelection, useRephrase, useTextToSpeech } from "./hooks"
-import {
-  DialogHeader,
-  ActorSelector,
-  TextInput,
-  OutputCard,
-} from "./components"
+import React, { useState } from 'react';
+import { Dialog } from 'primereact/dialog';
+import { MainDialogProps } from './types';
+import { useActorSelection, useRephrase, useTextToSpeech } from './hooks';
+import { ActorSelector, DialogHeader, OutputCard, TextInput } from './components';
 
-export const MainDialog: React.FC<MainDialogProps> = ({ visible, onHide, origText }) => {
-  const [userText, setUserText] = useState<string>(origText)
-  
-  const { selectedActor, selectActor } = useActorSelection()
-  const { isSpeaking, speak } = useTextToSpeech()
+export const MainDialog: React.FC<MainDialogProps> = ({visible, onHide, origText}) => {
+  const [userText, setUserText] = useState<string>(origText);
+
+  const {selectedActor, selectActor} = useActorSelection();
+  const {isSpeaking, speak} = useTextToSpeech();
 
   return (
     <Dialog
@@ -26,28 +21,27 @@ export const MainDialog: React.FC<MainDialogProps> = ({ visible, onHide, origTex
       draggable={false}
       resizable={false}
       closeOnEscape
-      className="w-3/4 max-w-4xl"
+      className='w-3/4 max-w-4xl'
     >
-      <div className="space-y-4">
-        <TextInput 
-          value={userText} 
-          onChange={setUserText} 
-          readOnly 
+      <div className='space-y-4'>
+        <TextInput
+          value={userText}
+          onChange={setUserText}
+          readOnly
         />
 
-        <ActorSelector 
-          value={selectedActor} 
-          onChange={selectActor} 
+        <ActorSelector
+          value={selectedActor}
+          onChange={selectActor}
         />
 
         {/* Output Section */}
         <OutputCard
-          origText="TODO"
+          origText='TODO'
           actor={selectedActor}
           key={`outout-${selectedActor.id}`}
         />
-
       </div>
     </Dialog>
-  )
-}
+  );
+};

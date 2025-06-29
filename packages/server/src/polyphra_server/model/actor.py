@@ -93,9 +93,10 @@ Rephrased version:"""
 
 class ActorSpec(BaseModel):
     id: ActorId
-    name: str # e.g. "The Blonde Winner"
-    description: str # 
+    name: str  # e.g. "The Blonde Winner"
+    description: str  #
     origin: str  # e.g. The New Rome
+
 
 actor_presets = (
     ActorSpec(

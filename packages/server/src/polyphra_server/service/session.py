@@ -2,17 +2,18 @@ import uuid
 from pydantic import BaseModel
 from itsdangerous import URLSafeSerializer
 
+
 class Session(BaseModel):
     user_id: str | int | None = None
     session_id: uuid.UUID
+
 
 class SessionService:
     def __init__(self, secret_key: str, salt: str = "polyphra_session"):
         # self.__secret_key = secret_key
         # if not salt:
-            # salt = crypt.mksalt(method=crypt.METHOD_SHA256)
+        # salt = crypt.mksalt(method=crypt.METHOD_SHA256)
         self.__serializer = URLSafeSerializer(secret_key=secret_key, salt=salt)
-
 
     def create_session(
         self, user_id: str | int | None = None, salt: str | None = None

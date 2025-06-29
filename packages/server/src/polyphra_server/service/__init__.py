@@ -10,7 +10,7 @@ class _DefaultServices:
     def session(self):
         secret_key = os.environ["POLYPHRA_SESSION_SECRET"]
         return SessionService(secret_key=secret_key)
-    
+
     @cached_property
     def text2audio(self):
         return text2audio
@@ -18,8 +18,6 @@ class _DefaultServices:
     @cached_property
     def paraphrase_text(self):
         return llm_paraphrase
-
-
 
 
 default_services = _DefaultServices()
