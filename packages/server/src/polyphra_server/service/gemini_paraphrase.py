@@ -1,6 +1,7 @@
 import logging
 import litellm
 import langfuse
+import os
 
 from ..model import ActorId
 
@@ -15,5 +16,6 @@ async def llm_paraphrase(
     res: litellm.ModelResponse = await litellm.acompletion(
         model=model,
         messages=[{"role": "user", "content": actor.to_paraphrase_prompt(orig_text)}],
+        vertex_project=os.environ.get("GOOGLE_CLOUD_PROJECT")
     )
     return res.choices[0].message.content
