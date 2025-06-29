@@ -1,6 +1,7 @@
 {
-  "name": "@polyphra/wxt",
-  "version": "0.0.1",
+  "name": "polyphra-browser-extension",
+  "private": true,
+  "version": "0.1.0",
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
