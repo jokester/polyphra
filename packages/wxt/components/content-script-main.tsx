@@ -111,12 +111,12 @@ const DummyDialog: React.FC<{ visible?: boolean; text: string; onHide(): void }>
   );
 };
 
-export function mount(container: HTMLElement, shadow: ShadowRoot, revivedAuthToken?: string) {
+export function mount(container: HTMLElement, maybeShadow: ShadowRoot | Document, revivedAuthToken?: string) {
   const root = createRoot(container);
   root.render(
     // styleContainer and appendTo are required for PrimeReact to work correctly in shadow DOM
     <PrimeReactProvider
-      value={{ styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')! }}
+      value={{ styleContainer: maybeShadow.querySelector('head')!, appendTo: maybeShadow.querySelector('body')! }}
     >
       <App revivedAuthToken={revivedAuthToken} />
     </PrimeReactProvider>,

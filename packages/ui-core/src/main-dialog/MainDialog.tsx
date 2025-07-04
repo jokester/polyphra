@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { MainDialogProps } from './types';

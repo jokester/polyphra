@@ -6,9 +6,23 @@
         "build": "vite build",
         "preview": "vite preview"
     },
+    "dependencies": {
+        "@polyphra/ui-core": "workspace:^",
+        "debug": "catalog:deps",
+        "foxact": "catalog:deps-react",
+        "primereact": "catalog:deps-react",
+        "react": "catalog:deps-react",
+        "react-dom": "catalog:deps-react"
+    },
     "devDependencies": {
         "@preact/preset-vite": "^2.10.2",
+        "@tailwindcss/vite": "catalog:dev-deps",
+        "@types/react": "catalog:dev-deps",
+        "@types/react-dom": "catalog:dev-deps",
         "@vitejs/plugin-react": "^4.6.0",
+        "tailwindcss": "catalog:dev-deps",
+        "tw-animate-css": "catalog:dev-deps",
+        "typescript": "catalog:dev-deps",
         "vite": "catalog:dev-deps"
     }
 }
