@@ -2,8 +2,15 @@ PYTHON_BIN ?= python3.12
 CONDA_ENV ?= polyphra-py312
 CONDA_YML ?= conda.yaml
 
+dev-wxt:
+	pnpm run --filter @polyphra/wxt dev
+
+dev-site:
+	pnpm run --filter @polyphra/site dev
+
 dev-server: deps
 	venv/bin/fastapi dev server.py
+
 deps: venv/.deps_installed
 
 venv/.deps_installed: venv requirements.txt

@@ -3,15 +3,15 @@ import { PrimeReactProvider } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
 import { Button } from 'primereact/button';
 import { setSelectCallback } from './setup-select-callback';
-import { createDebugLogger } from './logger';
+import { createDebugLogger } from '@polyphra/ui-core/src/logger';
 import { Toast } from 'primereact/toast';
 import { OverlayPanel } from 'primereact/overlaypanel';
-import { MainDialog } from './main-dialog';
+import { MainDialog } from '@polyphra/ui-core/src/main-dialog';
 
 import { Dialog } from 'primereact/dialog';
-import { PolyphraApiClient } from '@/api/client';
+import { PolyphraApiClient } from '@polyphra/ui-core/src/api';
 import { useSingleton } from 'foxact/use-singleton';
-import { ApiProvider } from '@/api';
+import { ApiProvider } from '@polyphra/ui-core/src/app';
 
 const logger = createDebugLogger('components:content-script-app');
 
@@ -29,7 +29,7 @@ const App: React.FC<{revivedAuthToken?: string}> = (props) => {
 
   const overlayPanelRef = React.useRef<OverlayPanel>(null);
   const [textSelection, setTextSelection] = React.useState<string | null>(
-    null
+    null,
     // "I'm very happy because the weather is nice today.",
   );
   const [showDialog, setShowDialog] = React.useState(false);
@@ -78,13 +78,13 @@ const App: React.FC<{revivedAuthToken?: string}> = (props) => {
           Rephrase with Polyphra
         </Button>
       </OverlayPanel>
-      {
-        showDialog && <MainDialog
-        visible
-        origText={textSelection ?? ''}
-        onHide={() => setShowDialog(false)}
-      />
-      }
+      {showDialog && (
+        <MainDialog
+          visible
+          origText={textSelection ?? ''}
+          onHide={() => setShowDialog(false)}
+        />
+      )}
     </ApiProvider>
   );
 };
@@ -111,12 +111,12 @@ const DummyDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> =
   );
 };
 
-export function mount(container: HTMLElement, shadow: ShadowRoot, revivedAuthToken?: string) {
+export function mount(container: HTMLElement, maybeShadow: ShadowRoot | Document, revivedAuthToken?: string) {
   const root = createRoot(container);
   root.render(
     // styleContainer and appendTo are required for PrimeReact to work correctly in shadow DOM
     <PrimeReactProvider
-      value={{styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')!}}
+      value={{styleContainer: maybeShadow.querySelector('head')!, appendTo: maybeShadow.querySelector('body')!}}
     >
       <App revivedAuthToken={revivedAuthToken} />
     </PrimeReactProvider>,

@@ -1,4 +1,4 @@
-import { createDebugLogger } from '@/components/logger';
+import { createDebugLogger } from '../logger';
 import { ResourcePool } from '@jokester/ts-commonutil/lib/concurrency/resource-pool';
 const logger = createDebugLogger('polyphra:api');
 
@@ -100,5 +100,20 @@ export class PolyphraApiClient {
       throw new Error(`Error posting data to ${endpoint}: ${response.statusText}`);
     }
     return response.json();
+  }
+}
+
+export class DummyApiClient extends PolyphraApiClient {
+  async createParaphrase(actor: ActorSpec, text: string): Promise<{text: string}> {
+    return {
+      text: 'TODO',
+    };
+  }
+
+  async createTts(actor: ActorSpec, text: string): Promise<{audio_uri: string; audio_duration: number}> {
+    return {
+      audio_uri: 'https://example.com/audio.mp3',
+      audio_duration: 5,
+    };
   }
 }

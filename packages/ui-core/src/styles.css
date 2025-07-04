@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@source "./";
+
+/* theme is currently fixed */
+@import 'primereact/resources/themes/fluent-light/theme.css';
+/* @import 'primereact/resources/themes/saga-blue/theme.css'; */

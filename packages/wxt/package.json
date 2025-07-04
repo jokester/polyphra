@@ -1,6 +1,6 @@
 {
-  "name": "Polyphra",
-  "private": true,
+  "name": "@polyphra/wxt",
+  "description": "browser extension",
   "version": "0.1.1",
   "scripts": {
     "dev": "wxt",
@@ -20,28 +20,21 @@
     "typecheck:watch": "tsc --watch --noEmit"
   },
   "dependencies": {
-    "@jokester/ts-commonutil": "^0.6.1",
-    "@radix-ui/react-avatar": "^1.1.10",
-    "@radix-ui/react-select": "^2.2.5",
-    "@radix-ui/react-slot": "^1.2.3",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "debug": "catalog:deps",
-    "foxact": "^0.2.49",
-    "lucide-react": "^0.523.0",
-    "primereact": "^10.9.6",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "tailwind-merge": "^3.3.1"
+    "foxact": "catalog:deps-react",
+    "primereact": "catalog:deps-react",
+    "react": "catalog:deps-react",
+    "react-dom": "catalog:deps-react",
+    "@polyphra/ui-core": "workspace:^"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.11",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@wxt-dev/module-react": "^1.1.3",
-    "tailwindcss": "^4",
-    "tw-animate-css": "^1.3.4",
+    "@tailwindcss/vite": "catalog:dev-deps",
+    "@types/react": "catalog:dev-deps",
+    "@types/react-dom": "catalog:dev-deps",
+    "@wxt-dev/module-react": "catalog:dev-deps",
+    "tw-animate-css": "catalog:dev-deps",
     "typescript": "catalog:dev-deps",
+    "tailwindcss": "catalog:dev-deps",
     "wxt": "catalog:dev-deps"
   }
 }
