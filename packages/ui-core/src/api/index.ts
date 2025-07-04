@@ -1,4 +1,4 @@
-import { createDebugLogger } from '@/components/logger';
+import { createDebugLogger } from '../logger';
 import { ResourcePool } from '@jokester/ts-commonutil/lib/concurrency/resource-pool';
 const logger = createDebugLogger('polyphra:api');
 

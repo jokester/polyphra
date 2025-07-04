@@ -3,19 +3,19 @@ import { PrimeReactProvider } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
 import { Button } from 'primereact/button';
 import { setSelectCallback } from './setup-select-callback';
-import { createDebugLogger } from './logger';
+import { createDebugLogger } from '@polyphra/ui-core/src/logger';
 import { Toast } from 'primereact/toast';
 import { OverlayPanel } from 'primereact/overlaypanel';
-import { MainDialog } from './main-dialog';
+import { MainDialog } from '@polyphra/ui-core/src/main-dialog';
 
 import { Dialog } from 'primereact/dialog';
-import { PolyphraApiClient } from '@/api/client';
+import { PolyphraApiClient } from '@polyphra/ui-core/src/api';
 import { useSingleton } from 'foxact/use-singleton';
-import { ApiProvider } from '@/api';
+import { ApiProvider } from '@polyphra/ui-core/src/app';
 
 const logger = createDebugLogger('components:content-script-app');
 
-const App: React.FC<{revivedAuthToken?: string}> = (props) => {
+const App: React.FC<{ revivedAuthToken?: string }> = (props) => {
   const toastRef = React.useRef<Toast>(null);
   const apiClientRef = useSingleton(() =>
     new PolyphraApiClient(
@@ -80,23 +80,23 @@ const App: React.FC<{revivedAuthToken?: string}> = (props) => {
       </OverlayPanel>
       {
         showDialog && <MainDialog
-        visible
-        origText={textSelection ?? ''}
-        onHide={() => setShowDialog(false)}
-      />
+          visible
+          origText={textSelection ?? ''}
+          onHide={() => setShowDialog(false)}
+        />
       }
     </ApiProvider>
   );
 };
 
-const DummyDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> = (props) => {
+const DummyDialog: React.FC<{ visible?: boolean; text: string; onHide(): void }> = (props) => {
   return (
     <Dialog
       visible={props.visible}
       header='Header'
       draggable={false}
       className='bg-white'
-      style={{width: '80vw'}}
+      style={{ width: '80vw' }}
       position='top'
       onHide={props.onHide}
     >
@@ -116,7 +116,7 @@ export function mount(container: HTMLElement, shadow: ShadowRoot, revivedAuthTok
   root.render(
     // styleContainer and appendTo are required for PrimeReact to work correctly in shadow DOM
     <PrimeReactProvider
-      value={{styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')!}}
+      value={{ styleContainer: shadow.querySelector('head')!, appendTo: shadow.querySelector('body')! }}
     >
       <App revivedAuthToken={revivedAuthToken} />
     </PrimeReactProvider>,

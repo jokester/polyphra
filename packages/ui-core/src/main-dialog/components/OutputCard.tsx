@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Loader2, RefreshCw, Volume2 } from 'lucide-react';
-import { useApiClient } from '@/api';
+import { useApiClient } from '../../app';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
-import { ActorSpec } from '@/api/client';
-import { createDebugLogger } from '@/components/logger';
+import { ActorSpec } from '../../api';
+import { createDebugLogger } from '../../logger';
 import { ProgressBar } from 'primereact/progressbar';
 
 const logger = createDebugLogger('polyphra:components:OutputCard');
@@ -32,18 +32,18 @@ export const OutputCard: React.FC<OutputCardProps> = ({
 }) => {
   const api = useApiClient();
   const [s, setS] = useState<OutputState | null>(null);
-  const [playbackAudio, setPlaybackAudio] = useState<{startTimestamp: number; uri: string} | null>(null);
+  const [playbackAudio, setPlaybackAudio] = useState<{ startTimestamp: number; uri: string } | null>(null);
 
   useAsyncEffect(async (running) => {
     if (!running.current) return;
     setS({});
     if (!origText) {
-      setS({paramError: 'No text provided'});
+      setS({ paramError: 'No text provided' });
       return;
     }
 
     if (!actor) {
-      setS({paramError: 'No style selected'});
+      setS({ paramError: 'No style selected' });
       return;
     }
 
@@ -52,10 +52,10 @@ export const OutputCard: React.FC<OutputCardProps> = ({
     });
     if (!running.current) return;
     if (!paraphraseRes?.text) {
-      setS({rephraseError: 'Failed generating text'});
+      setS({ rephraseError: 'Failed generating text' });
       return;
     } else {
-      setS({rephrasedText: paraphraseRes.text});
+      setS({ rephrasedText: paraphraseRes.text });
     }
 
     const ttsRes = await api.createTts(actor, paraphraseRes.text).catch(e => {
@@ -63,10 +63,10 @@ export const OutputCard: React.FC<OutputCardProps> = ({
     });
     if (!running.current) return;
     if (!ttsRes?.audio_uri) {
-      setS(prev => ({...prev, speechError: 'Failed generating speech'}));
+      setS(prev => ({ ...prev, speechError: 'Failed generating speech' }));
       return;
     }
-    setS(prev => ({...prev, speechUri: ttsRes.audio_uri, speechDuration: ttsRes.audio_duration}));
+    setS(prev => ({ ...prev, speechUri: ttsRes.audio_uri, speechDuration: ttsRes.audio_duration }));
   }, [origText, actor]);
 
   useAsyncEffect(async (running, finish) => {
@@ -83,7 +83,7 @@ export const OutputCard: React.FC<OutputCardProps> = ({
   const textOutput = s?.rephrasedText ?? (
     <>
       <p>Generating rephrase...</p>
-      <ProgressBar mode='indeterminate' style={{height: '0.8em'}}></ProgressBar>
+      <ProgressBar mode='indeterminate' style={{ height: '0.8em' }}></ProgressBar>
     </>
   );
 
@@ -94,8 +94,8 @@ export const OutputCard: React.FC<OutputCardProps> = ({
       </>
     )
     : s?.speechError
-    ? 'Error generating voice'
-    : 'Generating voice...';
+      ? 'Error generating voice'
+      : 'Generating voice...';
 
   return (
     <div className='space-y-2'>
@@ -105,7 +105,7 @@ export const OutputCard: React.FC<OutputCardProps> = ({
         <Button
           outlined
           disabled={!s?.speechUri}
-          onClick={() => setPlaybackAudio({uri: s!.speechUri!, startTimestamp: Date.now()})}
+          onClick={() => setPlaybackAudio({ uri: s!.speechUri!, startTimestamp: Date.now() })}
           className='w-40 justify-center'
           size='small'
           aria-label='play generated voice'

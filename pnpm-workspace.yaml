@@ -1,26 +1,45 @@
 packages:
   - packages/wxt
+  - packages/site
   - packages/ui-core
 
 catalogs:
   deps:
-    "@hono/node-server": "^1.14.1"
-    debug: "^4.4.1"
-    hono: "^4.7.7"
-
+    '@jokester/ts-commonutil': ^0.6.1
+    debug: ^4.4.1
+  deps-hono:
+    '@hono/node-server': ^1.15.0
+    hono: ^4.8.4
+  deps-react:
+    '@radix-ui/react-avatar': ^1.1.10
+    '@radix-ui/react-select': ^2.2.5
+    '@radix-ui/react-slot': ^1.2.3
+    clsx: ^2.1.1
+    foxact: ^0.2.49
+    lucide-react: ^0.523.0
+    primereact: ^10.9.6
+    react: ^19.1.0
+    react-dom: ^19.1.0
+    tailwind-merge: ^3.3.1
+    class-variance-authority: ^0.7.1
   dev-deps:
-    # Shared versions from shared-config/package.json and hono/package.json
-    "@eslint-react/eslint-plugin": ^1.48.4
-    "@eslint/js": ^9.25.0
-    "@hono/node-server": ^1.14.1
-    "@tsconfig/strictest": ^2.0.5
-    "@types/debug": ^4.1.12
-    "@types/jest": "<30"
-    "@types/node": ^20.17.30
+    '@eslint-react/eslint-plugin': ^1.52.2
+    '@eslint/js': ^9.30.1
+    '@tsconfig/strictest': ^2.0.5
+    '@types/debug': ^4.1.12
+    '@types/jest': <30
+    '@types/node': ^20.19.4
     dprint: ^0.47.6
-    eslint: ^9.25.0
-    "eslint-plugin-import-x": ^4.10.6
-    tsx: ^4.19.3
-    typescript: "^5.8.3"
-    "typescript-eslint": ^8.30.1
+    eslint: ^9.30.1
+    eslint-plugin-import-x: ^4.16.1
+    tsx: ^4.20.3
+    typescript: ^5.8.3
+    typescript-eslint: ^8.35.1
     wxt: ^0.20.7
+    '@wxt-dev/module-react': ^1.1.3
+    "vite": "<7"
+    tailwindcss: ^4.1.11
+    tw-animate-css: ^1.3.5
+    '@tailwindcss/vite': ^4.1.11
+    '@types/react': ^19.1.8
+    '@types/react-dom': ^19.1.6

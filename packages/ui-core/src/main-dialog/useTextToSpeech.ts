@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { StyleSpec } from '../types';
+import { useState } from "react";
+import { StyleSpec } from "./types";
 
 export const useTextToSpeech = () => {
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
@@ -14,8 +14,11 @@ export const useTextToSpeech = () => {
 
     // Try to set voice based on actor's accent
     const voices = speechSynthesis.getVoices();
-    if (actor?.accent === 'British') {
-      const britishVoice = voices.find((voice) => voice.lang.includes('en-GB') || voice.name.includes('British'));
+    if (actor?.accent === "British") {
+      const britishVoice = voices.find(
+        (voice) =>
+          voice.lang.includes("en-GB") || voice.name.includes("British")
+      );
       if (britishVoice) utterance.voice = britishVoice;
     }
 
