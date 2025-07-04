@@ -4,8 +4,8 @@ import { MainDialogProps } from './types';
 import { ActorSelector, DialogHeader, OutputCard, TextInput } from './components';
 import { useActorSelection } from './useActorSelection';
 
-export const MainDialog: React.FC<MainDialogProps> = ({ visible, onHide, origText }) => {
-  const { actors, setCurrentActor, currentActor } = useActorSelection();
+export const MainDialog: React.FC<MainDialogProps> = ({visible, onHide, origText}) => {
+  const {actors, setCurrentActor, currentActor} = useActorSelection();
 
   return (
     <Dialog
@@ -21,7 +21,7 @@ export const MainDialog: React.FC<MainDialogProps> = ({ visible, onHide, origTex
       <div className='space-y-4'>
         <TextInput
           value={origText}
-          onChange={() => { }}
+          onChange={() => {}}
           readOnly
         />
 

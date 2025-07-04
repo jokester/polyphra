@@ -104,18 +104,16 @@ export class PolyphraApiClient {
 }
 
 export class DummyApiClient extends PolyphraApiClient {
-  async createParaphrase(actor: ActorSpec, text: string): Promise<{ text: string; }> {
-      return {
-        text: 'TODO'
-      }
+  async createParaphrase(actor: ActorSpec, text: string): Promise<{text: string}> {
+    return {
+      text: 'TODO',
+    };
   }
 
-  async createTts(actor: ActorSpec, text: string): Promise<{ audio_uri: string; audio_duration: number; }> {
+  async createTts(actor: ActorSpec, text: string): Promise<{audio_uri: string; audio_duration: number}> {
     return {
       audio_uri: 'https://example.com/audio.mp3',
       audio_duration: 5,
-    }
-      
+    };
   }
-
 }

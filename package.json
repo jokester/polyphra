@@ -8,7 +8,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "catalog:dev-deps",
     "@eslint-react/eslint-plugin": "catalog:dev-deps",
     "@eslint/js": "catalog:dev-deps",
     "@tsconfig/strictest": "catalog:dev-deps",

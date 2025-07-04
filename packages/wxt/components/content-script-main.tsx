@@ -15,7 +15,7 @@ import { ApiProvider } from '@polyphra/ui-core/src/app';
 
 const logger = createDebugLogger('components:content-script-app');
 
-const App: React.FC<{ revivedAuthToken?: string }> = (props) => {
+const App: React.FC<{revivedAuthToken?: string}> = (props) => {
   const toastRef = React.useRef<Toast>(null);
   const apiClientRef = useSingleton(() =>
     new PolyphraApiClient(
@@ -29,7 +29,7 @@ const App: React.FC<{ revivedAuthToken?: string }> = (props) => {
 
   const overlayPanelRef = React.useRef<OverlayPanel>(null);
   const [textSelection, setTextSelection] = React.useState<string | null>(
-    null
+    null,
     // "I'm very happy because the weather is nice today.",
   );
   const [showDialog, setShowDialog] = React.useState(false);
@@ -78,25 +78,25 @@ const App: React.FC<{ revivedAuthToken?: string }> = (props) => {
           Rephrase with Polyphra
         </Button>
       </OverlayPanel>
-      {
-        showDialog && <MainDialog
+      {showDialog && (
+        <MainDialog
           visible
           origText={textSelection ?? ''}
           onHide={() => setShowDialog(false)}
         />
-      }
+      )}
     </ApiProvider>
   );
 };
 
-const DummyDialog: React.FC<{ visible?: boolean; text: string; onHide(): void }> = (props) => {
+const DummyDialog: React.FC<{visible?: boolean; text: string; onHide(): void}> = (props) => {
   return (
     <Dialog
       visible={props.visible}
       header='Header'
       draggable={false}
       className='bg-white'
-      style={{ width: '80vw' }}
+      style={{width: '80vw'}}
       position='top'
       onHide={props.onHide}
     >
@@ -116,7 +116,7 @@ export function mount(container: HTMLElement, maybeShadow: ShadowRoot | Document
   root.render(
     // styleContainer and appendTo are required for PrimeReact to work correctly in shadow DOM
     <PrimeReactProvider
-      value={{ styleContainer: maybeShadow.querySelector('head')!, appendTo: maybeShadow.querySelector('body')! }}
+      value={{styleContainer: maybeShadow.querySelector('head')!, appendTo: maybeShadow.querySelector('body')!}}
     >
       <App revivedAuthToken={revivedAuthToken} />
     </PrimeReactProvider>,
