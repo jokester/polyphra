@@ -7,6 +7,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": ">=20",
+    "pnpm": "^10"
+  },
+  "engineStrict": true,
   "devDependencies": {
     "@eslint-react/eslint-plugin": "catalog:dev-deps",
     "@eslint/js": "catalog:dev-deps",
@@ -19,8 +24,7 @@
     "typescript": "catalog:dev-deps",
     "typescript-eslint": "catalog:dev-deps"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Wang Guan <momocraft@gmail.com>",
   "license": "ISC",
   "packageManager": "pnpm@10.12.4"
 }
