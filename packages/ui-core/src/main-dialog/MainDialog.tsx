@@ -1,10 +1,8 @@
-'use client';
-
 import React, { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { MainDialogProps } from './types';
-import { useActorSelection, useRephrase, useTextToSpeech } from './hooks';
 import { ActorSelector, DialogHeader, OutputCard, TextInput } from './components';
+import { useActorSelection } from './useActorSelection';
 
 export const MainDialog: React.FC<MainDialogProps> = ({visible, onHide, origText}) => {
   const {actors, setCurrentActor, currentActor} = useActorSelection();

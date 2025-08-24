@@ -1,7 +1,7 @@
 import type { ContentScriptContext } from 'wxt/dist/utils/content-script-context';
-import { mount } from '../components/content-script-app';
+import { mount } from '../components/content-script-main';
 // import 'primereact/resources/themes/lara-light-cyan/theme.css';
-import '@/components/styles.css';
+import '@polyphra/ui-core/src/styles.css';
 // for unknown reason this has to be imported later
 import 'primereact/resources/themes/fluent-light/theme.css';
 

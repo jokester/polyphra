@@ -1,4 +1,4 @@
-import { createDebugLogger } from './logger';
+import { createDebugLogger } from '../../ui-core/src/logger';
 
 interface Callbacks {
   onSelect?: (anchorNode: Node, focusNode: Node, text: string) => void;

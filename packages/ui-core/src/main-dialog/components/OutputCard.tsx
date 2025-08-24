@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Loader2, RefreshCw, Volume2 } from 'lucide-react';
-import { useApiClient } from '@/api';
+import { useApiClient } from '../../app';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
-import { ActorSpec } from '@/api/client';
-import { createDebugLogger } from '@/components/logger';
+import { ActorSpec } from '../../api';
+import { createDebugLogger } from '../../logger';
 import { ProgressBar } from 'primereact/progressbar';
 
 const logger = createDebugLogger('polyphra:components:OutputCard');
