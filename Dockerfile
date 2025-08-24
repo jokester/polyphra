@@ -1,8 +1,8 @@
-FROM python:3.12-slim
+FROM ghcr.io/astral-sh/uv:python3.11-trixie-slim
 
-COPY requirements.txt Makefile server.py /app/
-COPY packages /app/packages
+COPY requirements.txt Makefile server.py packages /app/
+
 WORKDIR /app
-RUN python3 -mvenv venv && venv/bin/pip install -r requirements.txt --no-cache-dir
+RUN make deps
 
 CMD venv/bin/fastapi run server.py
