@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Volume2 } from 'lucide-react';
@@ -48,10 +48,9 @@ async function createSegments(
 
   // Process all segments in parallel
   const ttsPromises = segments.map(async (segment, index) => {
-    await using token = await ttsPool.borrow();
 
     try {
-      const ttsRes = await api.createTts(actor, segment.text);
+      const ttsRes = await ttsPool.use(() => api.createTts(actor, segment.text));
 
       // Update the segment with TTS result
       segments[index] = {
@@ -98,7 +97,7 @@ export const OutputCard: React.FC<OutputCardProps> = ({
   const api = useApiClient();
   const [s, setS] = useState<OutputState | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null)
 
   // Helper function to split text into segments for parallel TTS processing
   const splitTextIntoSegments = (text: string): string[] => {
@@ -191,39 +190,56 @@ export const OutputCard: React.FC<OutputCardProps> = ({
   }, [origText, actor]);
 
   // Sequential playback effect
-  useAsyncEffect(async (running) => {
+  useAsyncEffect(async (running, released) => {
     if (!isPlaying || !s?.speechSegments?.length) return;
+
+    // Only start playback if all segments are ready
+    const allReady = s.speechSegments.every(segment => segment.audio_uri || segment.error);
+    if (!allReady) return;
+
+    logger('Starting sequential playback of', s.speechSegments.length, 'segments');
 
     // Play segments sequentially
     for (let i = 0; i < s.speechSegments.length; i++) {
       const segment = s.speechSegments[i];
 
-      // Check if we should stop playing
-      if (!running.current || !isPlaying) break;
+      // Check if we should stop playing (check isPlaying state directly)
+      if (!running.current) break;
 
       if (segment.audio_uri && !segment.error) {
-        const audio = new Audio(segment.audio_uri);
-        setCurrentAudio(audio);
+        const audio = audioRef.current!;
+        audio.src = segment.audio_uri;
 
-        try {
-          await new Promise<void>((resolve, reject) => {
-            audio.onended = () => resolve();
-            audio.onerror = (e) => reject(e || new Error('Audio playback failed'));
-            audio.play().catch(reject);
-          });
-        } catch (e) {
-          logger('Failed to play audio segment', i, e);
+        const played = new Promise<void>((resolve, reject) => {
+          audio.onended = () => resolve();
+          audio.onerror = (e) => reject(e);
+          audio.play().catch(reject);
+        })
+
+        logger('Playing segment', i + 1, 'of', s.speechSegments.length);
+        const breaked = await Promise.race([played, released.then(() => true)])
+        if (breaked) {
+          audio.pause();
+          return;
         }
 
-        setCurrentAudio(null);
+        // Check again if we should continue (user might have clicked stop)
+        if (!running.current) break;
       }
     }
 
     // Playback finished
-    setIsPlaying(false);
-  }, [isPlaying, s?.speechSegments]);
+    logger('Sequential playback completed');
+    if (running.current) {
+      setIsPlaying(false);
+    }
+  }, [isPlaying]);
 
-  const textOutput = s?.rephrasedText ?? (
+  const textOutput = s?.paramError ? (
+    <p>{s.paramError}</p>
+  ) : s?.rephraseError ? (
+    <p>{s.rephraseError}</p>
+  ) : s?.rephrasedText ?? (
     <>
       <p>Generating rephrase...</p>
       <ProgressBar mode='indeterminate' style={{ height: '0.8em' }}></ProgressBar>
@@ -234,49 +250,46 @@ export const OutputCard: React.FC<OutputCardProps> = ({
     segment.audio_uri || segment.error
   );
 
-  const hasValidSegments = s?.speechSegments?.some(segment =>
-    segment.audio_uri && !segment.error
-  );
+  const hasErrors = s?.paramError || s?.rephraseError;
 
   const playButtonText = isPlaying
-    ? 'Playing... Click to stop'
+    ? 'Playing...'
     : allSegmentsReady
-      ? hasValidSegments
-        ? (
-          <>
-            Play voice<Volume2 className='w-4 h-4 ml-2' />
-          </>
-        )
-        : 'Error generating voice'
+      ? (
+        <>
+          Play voice<Volume2 className='w-4 h-4 ml-2' />
+        </>
+      )
       : 'Generating voice...';
 
   const handlePlayClick = () => {
     if (isPlaying) {
       setIsPlaying(false);
-      if (currentAudio) {
-        currentAudio.pause();
-        setCurrentAudio(null);
-      }
     } else {
       setIsPlaying(true);
     }
   };
 
+  logger('Render OutputCard', { origText, actor, state: s, isPlaying, });
+
   return (
     <div className='space-y-2'>
       <div className='flex items-center justify-between gap-2'>
+        <audio ref={audioRef} />
         <label className='text-sm font-medium'>Will be:</label>
         <span className='flex-1' />
-        <Button
-          outlined
-          disabled={!hasValidSegments}
-          onClick={handlePlayClick}
-          className='w-40 justify-center'
-          size='small'
-          aria-label={isPlaying ? 'stop playing voice' : 'play generated voice'}
-        >
-          {playButtonText}
-        </Button>
+        {!hasErrors && (
+          <Button
+            outlined
+            disabled={!allSegmentsReady}
+            onClick={handlePlayClick}
+            className='w-40 justify-center'
+            size='small'
+            aria-label={isPlaying ? 'stop playing voice' : 'play generated voice'}
+          >
+            {playButtonText}
+          </Button>
+        )}
 
         {/* <Button outlined size='small' aria-label=''> Regenerate <RefreshCw className='w-4 h-4 ml-2' /> </Button> */}
       </div>

@@ -6,7 +6,7 @@ import { useActorSelection } from './useActorSelection';
 
 export const MainDialog: React.FC<MainDialogProps> = ({ visible, onHide, origText }) => {
   const { actors, setCurrentActor, currentActor } = useActorSelection();
-  const [text, setText] = useState(origText || "I'm glad");
+  const [text, setText] = useState(origText || '');
 
   return (
     <Dialog
