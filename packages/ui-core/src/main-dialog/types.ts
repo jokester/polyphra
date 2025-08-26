@@ -8,7 +8,7 @@ export interface StyleSpec {
 }
 
 export interface MainDialogProps {
-  origText: string;
+  origText?: string;
   visible: boolean;
   onHide: () => void;
 }

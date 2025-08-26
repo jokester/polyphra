@@ -20,6 +20,7 @@
     "dprint": "catalog:dev-deps",
     "eslint": "catalog:dev-deps",
     "eslint-plugin-import-x": "catalog:dev-deps",
+    "taze": "^19.3.0",
     "tsx": "catalog:dev-deps",
     "typescript": "catalog:dev-deps",
     "typescript-eslint": "catalog:dev-deps"
