@@ -7,7 +7,7 @@ export const DialogHeader: React.FC = () => {
         Polyphra
       </h1>
       <p className='text-sm text-gray-600'>
-        Learn to speak in the famous styles
+        Learn the impressive styles
       </p>
     </div>
   );

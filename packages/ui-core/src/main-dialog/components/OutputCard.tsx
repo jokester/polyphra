@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
-import { Loader2, RefreshCw, Volume2 } from 'lucide-react';
+import { Volume2 } from 'lucide-react';
 import { useApiClient } from '../../app';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
+import { ResourcePool } from '@jokester/ts-commonutil/lib/concurrency/resource-pool-basic';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing'
-import { ActorSpec } from '../../api';
+import { ActorSpec, PolyphraApiClient } from '../../api';
 import { createDebugLogger } from '../../logger';
 import { ProgressBar } from 'primereact/progressbar';
 
@@ -16,15 +17,78 @@ interface OutputCardProps {
   actor: ActorSpec | null;
 }
 
+interface TtsSegment {
+  text: string;
+  audio_uri?: string;
+  audio_duration?: number;
+  error?: string;
+}
+
 interface OutputState {
   paramError?: string;
 
   rephrasedText?: string;
   rephraseError?: string;
 
-  speechUri?: string;
-  speechDuration?: number;
+  speechSegments?: TtsSegment[];
   speechError?: string;
+  speechGenerationProgress?: number;
+}
+
+async function createSegments(
+  api: PolyphraApiClient,
+  actor: ActorSpec,
+  texts: string[],
+  onProgress?: (completedCount: number, totalCount: number) => void
+): Promise<TtsSegment[]> {
+  const segments: TtsSegment[] = texts.map(text => ({ text }));
+
+  // Use ResourcePool to limit concurrent TTS calls (max 4 concurrent)
+  const ttsPool = ResourcePool.multiple([0, 1, 2, 3]);
+
+  // Process all segments in parallel
+  const ttsPromises = segments.map(async (segment, index) => {
+    await using token = await ttsPool.borrow();
+
+    try {
+      const ttsRes = await api.createTts(actor, segment.text);
+
+      // Update the segment with TTS result
+      segments[index] = {
+        ...segments[index],
+        audio_uri: ttsRes.audio_uri,
+        audio_duration: ttsRes.audio_duration
+      };
+
+      // Report progress if callback provided
+      if (onProgress) {
+        const completedSegments = segments.filter(seg => seg.audio_uri || seg.error).length;
+        onProgress(completedSegments, segments.length);
+      }
+
+      return { index, success: true };
+
+    } catch (e) {
+      logger('Failed to create TTS for segment', index, e);
+
+      // Update the segment with error
+      segments[index] = {
+        ...segments[index],
+        error: 'Failed to generate speech'
+      };
+
+      // Report progress if callback provided
+      if (onProgress) {
+        const completedSegments = segments.filter(seg => seg.audio_uri || seg.error).length;
+        onProgress(completedSegments, segments.length);
+      }
+
+      return { index, success: false };
+    }
+  });
+
+  await Promise.all(ttsPromises);
+  return segments;
 }
 
 export const OutputCard: React.FC<OutputCardProps> = ({
@@ -33,7 +97,33 @@ export const OutputCard: React.FC<OutputCardProps> = ({
 }) => {
   const api = useApiClient();
   const [s, setS] = useState<OutputState | null>(null);
-  const [playbackAudio, setPlaybackAudio] = useState<{ startTimestamp: number; uri: string } | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+
+  // Helper function to split text into segments for parallel TTS processing
+  const splitTextIntoSegments = (text: string): string[] => {
+    // Split by sentences, keeping punctuation
+    const sentences = text.match(/[^\.!?]+[\.!?]+/g) || [text];
+
+    // Group sentences into segments of reasonable length (max ~200 chars per segment)
+    const segments: string[] = [];
+    let currentSegment = '';
+
+    for (const sentence of sentences) {
+      if (currentSegment.length + sentence.length > 200 && currentSegment.length > 0) {
+        segments.push(currentSegment.trim());
+        currentSegment = sentence;
+      } else {
+        currentSegment += sentence;
+      }
+    }
+
+    if (currentSegment.trim()) {
+      segments.push(currentSegment.trim());
+    }
+
+    return segments.length > 0 ? segments : [text];
+  };
 
   useAsyncEffect(async (running) => {
     await wait(0.3e3) // this also throttles the call
@@ -60,27 +150,78 @@ export const OutputCard: React.FC<OutputCardProps> = ({
       setS({ rephrasedText: paraphraseRes.text });
     }
 
-    const ttsRes = await api.createTts(actor, paraphraseRes.text).catch(e => {
-      logger('Failed to create TTS', e);
-    });
-    if (!running.current) return;
-    if (!ttsRes?.audio_uri) {
-      setS(prev => ({ ...prev, speechError: 'Failed generating speech' }));
-      return;
+    // Split text into segments for parallel TTS processing
+    const textSegments = splitTextIntoSegments(paraphraseRes.text);
+
+    // Create segments with TTS using the extracted function
+    try {
+      const completedSegments = await createSegments(
+        api,
+        actor,
+        textSegments,
+        (completedCount, totalCount) => {
+          if (!running.current) return;
+          const progress = (completedCount / totalCount) * 100;
+          setS(prev => ({
+            ...prev,
+            speechGenerationProgress: progress
+          }));
+        }
+      );
+
+      if (!running.current) return;
+
+      // Update state with completed segments
+      setS(prev => ({
+        ...prev,
+        speechSegments: completedSegments,
+        speechGenerationProgress: 100
+      }));
+
+      // Check if any segments failed
+      const hasErrors = completedSegments.some(segment => segment.error);
+      if (hasErrors) {
+        setS(prev => ({ ...prev, speechError: 'Failed to generate full voice sample' }));
+      }
+    } catch (e) {
+      logger('Failed to create TTS segments', e);
+      if (!running.current) return;
+      setS(prev => ({ ...prev, speechError: 'Failed to generate voice' }));
     }
-    setS(prev => ({ ...prev, speechUri: ttsRes.audio_uri, speechDuration: ttsRes.audio_duration }));
   }, [origText, actor]);
 
-  useAsyncEffect(async (running, finish) => {
-    if (!playbackAudio) return;
+  // Sequential playback effect
+  useAsyncEffect(async (running) => {
+    if (!isPlaying || !s?.speechSegments?.length) return;
 
-    const audio = new Audio(playbackAudio.uri);
-    audio.play().catch(e => {
-      logger('Failed to play audio', e);
-    });
+    // Play segments sequentially
+    for (let i = 0; i < s.speechSegments.length; i++) {
+      const segment = s.speechSegments[i];
 
-    return finish.then(() => audio.pause());
-  }, [playbackAudio]);
+      // Check if we should stop playing
+      if (!running.current || !isPlaying) break;
+
+      if (segment.audio_uri && !segment.error) {
+        const audio = new Audio(segment.audio_uri);
+        setCurrentAudio(audio);
+
+        try {
+          await new Promise<void>((resolve, reject) => {
+            audio.onended = () => resolve();
+            audio.onerror = (e) => reject(e || new Error('Audio playback failed'));
+            audio.play().catch(reject);
+          });
+        } catch (e) {
+          logger('Failed to play audio segment', i, e);
+        }
+
+        setCurrentAudio(null);
+      }
+    }
+
+    // Playback finished
+    setIsPlaying(false);
+  }, [isPlaying, s?.speechSegments]);
 
   const textOutput = s?.rephrasedText ?? (
     <>
@@ -89,34 +230,70 @@ export const OutputCard: React.FC<OutputCardProps> = ({
     </>
   );
 
-  const playButtonText = s?.speechUri
-    ? (
-      <>
-        Play voice<Volume2 className='w-4 h-4 ml-2' />
-      </>
-    )
-    : s?.speechError
-      ? 'Error generating voice'
+  const allSegmentsReady = s?.speechSegments?.every(segment =>
+    segment.audio_uri || segment.error
+  );
+
+  const hasValidSegments = s?.speechSegments?.some(segment =>
+    segment.audio_uri && !segment.error
+  );
+
+  const playButtonText = isPlaying
+    ? 'Playing... Click to stop'
+    : allSegmentsReady
+      ? hasValidSegments
+        ? (
+          <>
+            Play voice<Volume2 className='w-4 h-4 ml-2' />
+          </>
+        )
+        : 'Error generating voice'
       : 'Generating voice...';
+
+  const handlePlayClick = () => {
+    if (isPlaying) {
+      setIsPlaying(false);
+      if (currentAudio) {
+        currentAudio.pause();
+        setCurrentAudio(null);
+      }
+    } else {
+      setIsPlaying(true);
+    }
+  };
 
   return (
     <div className='space-y-2'>
       <div className='flex items-center justify-between gap-2'>
-        <label className='text-sm font-medium'>Wlll be:</label>
+        <label className='text-sm font-medium'>Will be:</label>
         <span className='flex-1' />
         <Button
           outlined
-          disabled={!s?.speechUri}
-          onClick={() => setPlaybackAudio({ uri: s!.speechUri!, startTimestamp: Date.now() })}
+          disabled={!hasValidSegments}
+          onClick={handlePlayClick}
           className='w-40 justify-center'
           size='small'
-          aria-label='play generated voice'
+          aria-label={isPlaying ? 'stop playing voice' : 'play generated voice'}
         >
           {playButtonText}
         </Button>
 
         {/* <Button outlined size='small' aria-label=''> Regenerate <RefreshCw className='w-4 h-4 ml-2' /> </Button> */}
       </div>
+
+      {/* Show TTS generation progress */}
+      {s?.speechSegments && !allSegmentsReady && (
+        <div className='mb-2'>
+          <p className='text-xs text-gray-600 mb-1'>
+            Generating voice ({s.speechSegments.filter(seg => seg.audio_uri || seg.error).length}/{s.speechSegments.length} segments)
+          </p>
+          <ProgressBar
+            value={s.speechGenerationProgress || 0}
+            style={{ height: '0.5em' }}
+          />
+        </div>
+      )}
+
       <Card>
         <div className='whitespace-pre-line text-sm leading-relaxed italic'>
           {textOutput}
