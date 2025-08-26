@@ -3,3 +3,6 @@ venv
 .env
 .venv_created
 __pycache__
+.git
+.output
+.wxt

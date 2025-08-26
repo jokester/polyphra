@@ -12,14 +12,13 @@ import { PolyphraApiClient, DummyApiClient } from '@polyphra/ui-core/src/api';
 import { useSingleton } from 'foxact/use-singleton';
 import { ApiProvider } from '@polyphra/ui-core/src/app';
 import './main.css'
-import { DialogHeader } from '@polyphra/ui-core/src/main-dialog/components';
 
 const logger = createDebugLogger('components:content-script-app');
 
-const App: React.FC<{ revivedAuthToken?: string | null }> = (props) => {
+const App: React.FC<{ revivedAuthToken?: string | null, useDummyClient?: boolean }> = (props) => {
     const toastRef = React.useRef<Toast>(null);
     const apiClientRef = useSingleton(() =>
-        new DummyApiClient(
+        new (props.useDummyClient ? DummyApiClient : PolyphraApiClient)(
             localStorage.getItem('polyphra_api_url') || 'https://polyphra-api.ihate.work',
             props.revivedAuthToken || undefined,
             newToken => {
@@ -29,20 +28,7 @@ const App: React.FC<{ revivedAuthToken?: string | null }> = (props) => {
     );
 
     const overlayPanelRef = React.useRef<OverlayPanel>(null);
-    const [textSelection, setTextSelection] = React.useState<string | null>(
-        "I'm very happy because the weather is nice today.",
-    );
     const [showDialog, setShowDialog] = React.useState(false);
-    useEffect(() => {
-        toastRef.current?.show({
-            id: 'app-mounted',
-            // content: 'Polyphra running. Select some text!',
-            severity: 'info',
-            closable: false,
-            life: 5e3,
-        });
-    }, []);
-
     return (
         <ApiProvider value={apiClientRef.current}>
             <Toast ref={toastRef} position='top-left' />
@@ -58,7 +44,7 @@ const App: React.FC<{ revivedAuthToken?: string | null }> = (props) => {
             </OverlayPanel>
             {
                 // <DummyDialog /> ||
-                <MainDialog onHide={() => setShowDialog(false)} origText={''} visible />
+                <MainDialog onHide={() => setShowDialog(false)} visible />
             }
         </ApiProvider>
     );

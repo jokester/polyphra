@@ -4,8 +4,9 @@ import { MainDialogProps } from './types';
 import { ActorSelector, DialogHeader, OutputCard, TextInput } from './components';
 import { useActorSelection } from './useActorSelection';
 
-export const MainDialog: React.FC<MainDialogProps> = ({visible, onHide, origText}) => {
-  const {actors, setCurrentActor, currentActor} = useActorSelection();
+export const MainDialog: React.FC<MainDialogProps> = ({ visible, onHide, origText }) => {
+  const { actors, setCurrentActor, currentActor } = useActorSelection();
+  const [text, setText] = useState(origText || '');
 
   return (
     <Dialog
@@ -20,9 +21,10 @@ export const MainDialog: React.FC<MainDialogProps> = ({visible, onHide, origText
     >
       <div className='space-y-4'>
         <TextInput
-          value={origText}
-          onChange={() => {}}
-          readOnly
+          label=""
+          value={text}
+          onChange={(e) => setText(e)}
+          readOnly={!!origText}
         />
 
         <ActorSelector
@@ -32,9 +34,8 @@ export const MainDialog: React.FC<MainDialogProps> = ({visible, onHide, origText
         />
 
         <OutputCard
-          origText={origText}
+          origText={text}
           actor={currentActor}
-          key={`output-${currentActor?.id}`}
         />
       </div>
     </Dialog>
